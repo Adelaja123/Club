@@ -13,25 +13,28 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
-  title: "Oluwagbotemi Adelaja | Full-Stack Developer",
+  title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
   description:
-    "Award-winning full-stack developer crafting exceptional digital experiences. Specializing in modern web applications, scalable architectures, and intuitive user interfaces.",
+    "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
   keywords: [
-    "full-stack developer",
+    "full stack developer Lagos",
+    "Next.js developer Nigeria",
+    "React developer Lagos",
     "web developer",
-    "React",
     "Next.js",
+    "React",
     "TypeScript",
-    "software engineer",
+    "software engineer Nigeria",
   ],
   authors: [{ name: "Oluwagbotemi Adelaja" }],
   openGraph: {
-    title: "Oluwagbotemi Adelaja | Full-Stack Developer",
+    title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
     description:
-      "Award-winning full-stack developer crafting exceptional digital experiences.",
+      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences.",
     type: "website",
-    url: baseUrl,
-    siteName: "Oluwagbotemi Adelaja",
+    url: `${baseUrl}/`,
+    siteName: "Oluwagbotemi Adelaja - Full Stack Developer",
+    locale: "en_NG",
   },
   alternates: {
     canonical: `${baseUrl}/`,
@@ -46,9 +49,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Oluwagbotemi Adelaja | Full-Stack Developer",
+    title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
     description:
-      "Award-winning full-stack developer crafting exceptional digital experiences.",
+      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript.",
+    creator: "@oluwagbotemi",
   },
 };
 
@@ -62,9 +66,18 @@ export default function RootLayout({
     "@type": "Person",
     name: "Oluwagbotemi Adelaja",
     url: baseUrl,
-    jobTitle: "Full-Stack Developer",
+    jobTitle: "Full Stack Developer",
     description:
-      "Award-winning full-stack developer crafting exceptional digital experiences.",
+      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript.",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Lagos",
+      addressCountry: "NG",
+    },
+    sameAs: [
+      "https://github.com/Adelaja123",
+      "https://linkedin.com/in/oluwagbotemi-adelaja",
+    ],
   };
 
   return (
