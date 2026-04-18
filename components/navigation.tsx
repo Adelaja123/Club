@@ -78,11 +78,11 @@ export function Navigation() {
                   borderBottomColor: "transparent",
                 }
               : {
-                  backgroundColor: "oklch(0.99 0 0 / 0.92)",
-                  backdropFilter: "blur(20px)",
+                  backgroundColor: "oklch(0.94 0 0 / 0.98)",
+                  backdropFilter: "blur(24px)",
                   boxShadow:
-                    "0 1px 0 oklch(0 0 0 / 0.06), 0 4px 24px oklch(0 0 0 / 0.05)",
-                  borderBottomColor: "oklch(0 0 0 / 0.07)",
+                    "0 2px 8px oklch(0 0 0 / 0.12), 0 8px 32px oklch(0 0 0 / 0.08)",
+                  borderBottomColor: "oklch(0 0 0 / 0.12)",
                 }
           }
           transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
