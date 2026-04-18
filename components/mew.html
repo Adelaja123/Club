@@ -1,0 +1,451 @@
+"use client";
+
+import { useRef, useEffect, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
+} from "framer-motion";
+
+// ─── Magnetic Button ──────────────────────────────────────────────────────────
+function MagneticButton({
+  children,
+  strength = 0.25,
+}: {
+  children: React.ReactNode;
+  strength?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 200, damping: 18 });
+  const springY = useSpring(y, { stiffness: 200, damping: 18 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    x.set((e.clientX - (rect.left + rect.width / 2)) * strength);
+    y.set((e.clientY - (rect.top + rect.height / 2)) * strength);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ x: springX, y: springY }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => {
+        x.set(0);
+        y.set(0);
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ─── Word-by-word stagger reveal ──────────────────────────────────────────────
+function StaggerWords({
+  text,
+  className = "",
+  delay = 0,
+  muted = false,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+  muted?: boolean;
+}) {
+  const words = text.split(" ");
+  return (
+    <span
+      className={`inline-flex flex-wrap justify-center gap-x-[0.25em] ${className}`}
+    >
+      {words.map((word, i) => (
+        <span key={i} className="overflow-hidden inline-block">
+          <motion.span
+            className={`inline-block ${muted ? "text-muted-foreground" : "text-foreground"}`}
+            initial={{ y: "110%", opacity: 0 }}
+            animate={{ y: "0%", opacity: 1 }}
+            transition={{
+              duration: 0.9,
+              delay: delay + i * 0.08,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+// ─── Cursor follower ──────────────────────────────────────────────────────────
+function CursorOrb() {
+  const x = useMotionValue(-200);
+  const y = useMotionValue(-200);
+  const springX = useSpring(x, { stiffness: 80, damping: 20 });
+  const springY = useSpring(y, { stiffness: 80, damping: 20 });
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+    };
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, [x, y]);
+
+  return (
+    <motion.div
+      className="pointer-events-none fixed z-0 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full"
+      style={{
+        x: springX,
+        y: springY,
+        background:
+          "radial-gradient(circle, oklch(0.145 0 0 / 0.04) 0%, transparent 70%)",
+      }}
+    />
+  );
+}
+
+// ─── Marquee ticker ───────────────────────────────────────────────────────────
+const TICKER_ITEMS = [
+  "Full-Stack Development",
+  "UI/UX Design",
+  "Motion Design",
+  "React & Next.js",
+  "TypeScript",
+  "API Architecture",
+];
+
+function Ticker() {
+  const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  return (
+    <div className="relative w-full overflow-hidden border-y border-border/30 py-3">
+      <motion.div
+        className="flex whitespace-nowrap gap-12"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 22, ease: "linear", repeat: Infinity }}
+      >
+        {doubled.map((item, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-4 text-[11px] font-mono tracking-[0.2em] uppercase text-muted-foreground flex-shrink-0"
+          >
+            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+            {item}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Floating stat pill ───────────────────────────────────────────────────────
+function StatPill({
+  value,
+  label,
+  delay,
+  position,
+}: {
+  value: string;
+  label: string;
+  delay: number;
+  position: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.85, y: 12 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute ${position} hidden lg:flex items-center gap-3 px-4 py-3 rounded-2xl bg-background border border-border/50 shadow-sm backdrop-blur-sm`}
+    >
+      <span className="text-2xl font-light tracking-tight text-foreground">
+        {value}
+      </span>
+      <span className="text-[11px] text-muted-foreground leading-tight max-w-[72px]">
+        {label}
+      </span>
+    </motion.div>
+  );
+}
+
+// ─── Animated count-up number ─────────────────────────────────────────────────
+function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start: number | null = null;
+    const duration = 1800;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(ease * to));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    const raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to]);
+
+  return (
+    <>
+      {count}
+      {suffix}
+    </>
+  );
+}
+
+// ─── Hero Section ─────────────────────────────────────────────────────────────
+export function HeroSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 0.55], [0, 80]);
+  const scale = useTransform(scrollYProgress, [0, 0.55], [1, 0.97]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <section
+      ref={ref}
+      id="hero"
+      className="relative min-h-screen flex flex-col overflow-hidden"
+    >
+      {/* Cursor orb — desktop only */}
+      <CursorOrb />
+
+      {/* Noise/grain overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.025]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundSize: "256px 256px",
+        }}
+      />
+
+      {/* Subtle dot grid */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, currentColor 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+
+      {/* ── Main content ── */}
+      <motion.div
+        style={{ opacity, y, scale }}
+        className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pt-32 pb-8 max-w-7xl mx-auto w-full"
+      >
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-14"
+        >
+          <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-border/60 bg-secondary/60 text-[12px] font-mono tracking-[0.12em] uppercase text-muted-foreground backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            Available for new projects
+          </span>
+        </motion.div>
+
+        {/* Headline */}
+        <h1 className="text-[clamp(3.2rem,9vw,8.5rem)] font-light leading-[0.92] tracking-[-0.02em] text-center text-balance mb-8">
+          <StaggerWords text="Crafting Digital" delay={0.2} />
+          <br />
+          <StaggerWords text="Experiences" delay={0.45} muted />
+        </h1>
+
+        {/* Sub-copy */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-xl text-center text-base md:text-lg text-muted-foreground leading-relaxed mb-14"
+        >
+          Hi, I&apos;m{" "}
+          <span className="text-foreground font-medium">
+            Oluwagbotemi Adelaja
+          </span>{" "}
+          — a full-stack developer passionate about creating elegant,
+          performant, and user-centric web applications that make a lasting
+          impact.
+        </motion.p>
+
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          <MagneticButton>
+            <button
+              onClick={() => scrollTo("#projects")}
+              className="group relative overflow-hidden inline-flex items-center gap-3 px-7 py-3.5 bg-foreground text-background text-[13px] font-medium rounded-full"
+            >
+              <motion.span
+                className="absolute inset-0 bg-foreground/80 origin-left"
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                style={{ originX: 0 }}
+              />
+              <span className="relative z-10">View My Work</span>
+              <motion.span
+                className="relative z-10 w-5 h-5 rounded-full border border-background/30 flex items-center justify-center"
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.2 }}
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path
+                    d="M2 5h6M5.5 2.5L8 5l-2.5 2.5"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </motion.span>
+            </button>
+          </MagneticButton>
+
+          <MagneticButton>
+            <button
+              onClick={() => scrollTo("#about")}
+              className="group inline-flex items-center gap-3 px-7 py-3.5 border border-border text-foreground text-[13px] font-medium rounded-full hover:bg-secondary/60 transition-colors duration-300"
+            >
+              Learn More
+              <motion.span
+                className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center"
+                whileHover={{ rotate: 45 }}
+                transition={{ duration: 0.25 }}
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path
+                    d="M2 5h6M5.5 2.5L8 5l-2.5 2.5"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </motion.span>
+            </button>
+          </MagneticButton>
+        </motion.div>
+
+        {/* Floating stat pills */}
+        <StatPill
+          value={mounted ? "" : ""}
+          label="Years of experience"
+          delay={1.3}
+          position="left-8 top-1/2 -translate-y-16"
+        />
+        <StatPill
+          value=""
+          label="Projects shipped"
+          delay={1.45}
+          position="right-8 top-1/2 -translate-y-4"
+        />
+
+        {/* Count-up stats (desktop floating) */}
+        <AnimatePresence>
+          {mounted && (
+            <>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  delay: 1.3,
+                  duration: 0.7,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="absolute left-8 top-1/2 -translate-y-16 hidden lg:flex items-center gap-3 px-4 py-3 rounded-2xl bg-background border border-border/50 shadow-sm backdrop-blur-sm"
+              >
+                <span className="text-2xl font-light tracking-tight text-foreground font-mono">
+                  <CountUp to={4} suffix="+" />
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight max-w-[68px]">
+                  Years of experience
+                </span>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  delay: 1.45,
+                  duration: 0.7,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="absolute right-8 top-1/2 -translate-y-4 hidden lg:flex items-center gap-3 px-4 py-3 rounded-2xl bg-background border border-border/50 shadow-sm backdrop-blur-sm"
+              >
+                <span className="text-2xl font-light tracking-tight text-foreground font-mono">
+                  <CountUp to={30} suffix="+" />
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight max-w-[68px]">
+                  Projects shipped
+                </span>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* ── Ticker ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 0.8 }}
+        className="relative z-10 w-full"
+      >
+        <Ticker />
+      </motion.div>
+
+      {/* ── Scroll indicator ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.8 }}
+        className="relative z-10 flex flex-col items-center gap-2 py-8"
+      >
+        <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/50">
+          Scroll
+        </span>
+        <motion.div
+          className="w-px h-10 bg-gradient-to-b from-muted-foreground/40 to-transparent origin-top"
+          animate={{ scaleY: [0, 1, 0] }}
+          transition={{
+            duration: 1.6,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatDelay: 0.4,
+          }}
+        />
+      </motion.div>
+    </section>
+  );
+}
