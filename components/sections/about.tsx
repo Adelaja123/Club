@@ -6,7 +6,7 @@ import { motion, useInView } from "framer-motion"
 import { RevealText } from "../reveal-text"
 
 const skills = [
-  { category: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"] },
+  { category: "Frontend", items: ["React", "Next.js", "TypeScript", "Framer Motion", "HTML/CSS"] },
   { category: "Backend", items: ["Node.js", "Python", "PostgreSQL", "Redis", "GraphQL"] },
   { category: "Tools", items: ["Git", "Docker", "AWS", "Vercel", "Figma"] },
 ]
