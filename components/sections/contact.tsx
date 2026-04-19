@@ -17,6 +17,16 @@ const socialLinks = [
     url: CONTACT_LINKS.linkedin,
     ariaLabel: "Visit LinkedIn profile",
   },
+  {
+    name: "Twitter",
+    url: CONTACT_LINKS.twitter,
+    ariaLabel: "Visit Twitter profile",
+  },
+  {
+    name: "Instagram",
+    url: CONTACT_LINKS.instagram,
+    ariaLabel: "Visit Instagram profile",
+  },
 ];
 
 export function ContactSection() {
