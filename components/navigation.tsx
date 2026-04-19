@@ -8,7 +8,7 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Services", href: "#services" },
-  { label: "Blog", href: "#blog" },
+  // { label: "Blog", href: "#blog" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -84,11 +84,10 @@ export function Navigation() {
       >
         {/* Background layer - separate from content for clean animation */}
         <div
-          className={`absolute inset-0 transition-all duration-300 ease-out ${
-            isScrolled
+          className={`absolute inset-0 transition-all duration-300 ease-out ${isScrolled
               ? "bg-[#fafafa] border-b border-[#e5e5e5] shadow-[0_1px_3px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.04)]"
               : "bg-transparent border-b border-transparent"
-          }`}
+            }`}
           style={{
             backdropFilter: isScrolled ? "blur(12px)" : "none",
             WebkitBackdropFilter: isScrolled ? "blur(12px)" : "none",
@@ -120,19 +119,17 @@ export function Navigation() {
                       e.preventDefault();
                       scrollToSection(item.href);
                     }}
-                    className={`text-sm tracking-wide transition-colors relative group ${
-                      activeSection === item.href.replace("#", "")
+                    className={`text-sm tracking-wide transition-colors relative group ${activeSection === item.href.replace("#", "")
                         ? "text-foreground"
                         : "text-muted-foreground hover:text-foreground"
-                    }`}
+                      }`}
                   >
                     {item.label}
                     <span
-                      className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
-                        activeSection === item.href.replace("#", "")
+                      className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
                           ? "w-full"
                           : "w-0 group-hover:w-full"
-                      }`}
+                        }`}
                     />
                   </a>
                 </MagneticButton>
