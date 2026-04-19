@@ -32,17 +32,26 @@ export function ContactSection() {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // basic guard
+    if (!form.name || !form.email || !form.message) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
     setLoading(true);
     setSuccess(false);
+    setError("");
 
     try {
       const res = await fetch("/api/contact", {
@@ -54,14 +63,14 @@ export function ContactSection() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to send message");
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Failed to send message");
       }
 
       setSuccess(true);
       setForm({ name: "", email: "", subject: "", message: "" });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
     }
 
     setLoading(false);
@@ -103,7 +112,7 @@ export function ContactSection() {
               className="space-y-4"
             >
               <a
-                href="mailto:hello@gbotemi.dev"
+                href="mailto:hello@oluwagbotemi.space"
                 className="block text-2xl md:text-3xl font-light hover:text-background/80 transition-colors"
               >
                 hello@oluwagbotemi.space
@@ -133,7 +142,7 @@ export function ContactSection() {
             </motion.div>
           </div>
 
-          {/* RIGHT SIDE (FORM) */}
+          {/* RIGHT SIDE */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -178,18 +187,22 @@ export function ContactSection() {
               <MagneticButton strength={0.15}>
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all group mt-4 disabled:opacity-50"
+                  disabled={
+                    loading || !form.name || !form.email || !form.message
+                  }
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all mt-4 disabled:opacity-50"
                 >
                   {loading ? "Sending..." : "Send Message"}
                 </button>
               </MagneticButton>
 
               {success && (
-                <p className="text-sm text-green-400 mt-2">
+                <p className="text-sm text-green-400">
                   Message sent successfully.
                 </p>
               )}
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </form>
           </motion.div>
         </div>
