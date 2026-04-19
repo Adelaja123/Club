@@ -20,13 +20,19 @@ export function Navigation() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+    // The page uses a snap-container (overflow-y: scroll on <main>), so
+    // scroll events fire on that element — NOT on window.
+    const scrollContainer =
+      document.querySelector<HTMLElement>(".snap-container") ?? window;
 
-      // Scrolled state - triggers at 50px for clear visual change
+    const handleScroll = () => {
+      const currentScrollY =
+        scrollContainer instanceof Window
+          ? scrollContainer.scrollY
+          : scrollContainer.scrollTop;
+
       setIsScrolled(currentScrollY > 50);
 
-      // Hide/show nav on scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsNavVisible(false);
       } else {
@@ -36,7 +42,7 @@ export function Navigation() {
 
       // Active section detection
       const sections = navItems.map((item) => item.href.replace("#", ""));
-      for (const section of sections.reverse()) {
+      for (const section of [...sections].reverse()) {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -48,10 +54,16 @@ export function Navigation() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    scrollContainer.addEventListener("scroll", handleScroll as EventListener, {
+      passive: true,
+    });
     handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () =>
+      scrollContainer.removeEventListener(
+        "scroll",
+        handleScroll as EventListener
+      );
   }, [lastScrollY]);
 
   const scrollToSection = (href: string) => {
