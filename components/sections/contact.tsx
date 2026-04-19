@@ -62,7 +62,7 @@ export function ContactSection() {
                 href="mailto:hello@gbotemi.dev"
                 className="block text-2xl md:text-3xl font-light hover:text-background/80 transition-colors"
               >
-                hello@oluwagbotemi.io
+                hello@oluwagbotemi.space
               </a>
               <p className="text-background/60">Lagos, Nigeria</p>
             </motion.div>
