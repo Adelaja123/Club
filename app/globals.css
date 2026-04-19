@@ -86,15 +86,13 @@
 
 /* Snap scroll container */
 .snap-container {
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
   overflow-y: scroll;
   height: 100vh;
-  scroll-behavior: smooth;
 }
 
 .snap-section {
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
   min-height: 100vh;
 }
 
