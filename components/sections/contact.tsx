@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { RevealText } from "../reveal-text";
 import { MagneticButton } from "../magnetic-button";
@@ -23,6 +23,50 @@ export function ContactSection() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess(false);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      setSuccess(true);
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      console.error(err);
+    }
+
+    setLoading(false);
+  };
+
   return (
     <section
       ref={ref}
@@ -31,7 +75,7 @@ export function ContactSection() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left Column - Content */}
+          {/* LEFT SIDE unchanged */}
           <div>
             <RevealText delay={0.1}>
               <span className="text-sm text-background/60 tracking-widest uppercase mb-4 block">
@@ -62,12 +106,11 @@ export function ContactSection() {
                 href="mailto:hello@gbotemi.dev"
                 className="block text-2xl md:text-3xl font-light hover:text-background/80 transition-colors"
               >
-                hello@oluwagbotemi.space
+                hello@gbotemi.dev
               </a>
               <p className="text-background/60">Lagos, Nigeria</p>
             </motion.div>
 
-            {/* Social Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -90,117 +133,66 @@ export function ContactSection() {
             </motion.div>
           </div>
 
-          {/* Right Column - Form */}
+          {/* RIGHT SIDE (FORM) */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm text-background/60 mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Your name"
-                    className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background transition-colors"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm text-background/60 mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="your@email.com"
-                    className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="subject"
-                  className="block text-sm text-background/60 mb-2"
-                >
-                  Subject
-                </label>
                 <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  placeholder="Project inquiry"
-                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background transition-colors"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
+                />
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="your@email.com"
+                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm text-background/60 mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  placeholder="Tell me about your project..."
-                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background transition-colors resize-none"
-                />
-              </div>
+              <input
+                name="subject"
+                value={form.subject}
+                onChange={handleChange}
+                placeholder="Project inquiry"
+                className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
+              />
+
+              <textarea
+                name="message"
+                rows={4}
+                value={form.message}
+                onChange={handleChange}
+                placeholder="Tell me about your project..."
+                className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background resize-none"
+              />
 
               <MagneticButton strength={0.15}>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all group mt-4"
+                  disabled={loading}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all group mt-4 disabled:opacity-50"
                 >
-                  Send Message
-                  <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
               </MagneticButton>
+
+              {success && (
+                <p className="text-sm text-green-400 mt-2">
+                  Message sent successfully.
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
-
-        {/* Footer */}
-        <motion.footer
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="mt-32 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-4"
-        >
-          <p className="text-sm text-background/40">
-            © 2024 Oluwagbotemi Adelaja. All rights reserved.
-          </p>
-          <p className="text-sm text-background/40">
-            Designed & Built with care
-          </p>
-        </motion.footer>
       </div>
     </section>
   );
