@@ -66,28 +66,12 @@ export function Navigation() {
         initial={{ y: -100 }}
         animate={{ y: isNavVisible ? 0 : -100 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out border-b ${
+          isAtTop
+            ? "bg-transparent backdrop-blur-none border-transparent shadow-none"
+            : "bg-white/95 backdrop-blur-xl border-neutral-200 shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+        }`}
       >
-        <motion.div
-          animate={
-            isAtTop
-              ? {
-                  backgroundColor: "transparent",
-                  backdropFilter: "blur(0px)",
-                  boxShadow: "none",
-                  borderBottomColor: "transparent",
-                }
-              : {
-                  backgroundColor: "oklch(0.94 0 0 / 0.98)",
-                  backdropFilter: "blur(24px)",
-                  boxShadow:
-                    "0 2px 8px oklch(0 0 0 / 0.12), 0 8px 32px oklch(0 0 0 / 0.08)",
-                  borderBottomColor: "oklch(0 0 0 / 0.12)",
-                }
-          }
-          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ borderBottomWidth: "1px", borderBottomStyle: "solid" }}
-        >
         <nav className="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
           <MagneticButton strength={0.2}>
             <a
@@ -168,7 +152,6 @@ export function Navigation() {
             />
           </button>
         </nav>
-        </motion.div>
       </motion.header>
 
       <AnimatePresence>
