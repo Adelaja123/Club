@@ -13,7 +13,7 @@ const navItems = [
 ];
 
 export function Navigation() {
-  const [isAtTop, setIsAtTop] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -22,10 +22,11 @@ export function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const atTop = currentScrollY < 24;
 
-      setIsAtTop(atTop);
+      // Scrolled state - triggers at 50px for clear visual change
+      setIsScrolled(currentScrollY > 50);
 
+      // Hide/show nav on scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsNavVisible(false);
       } else {
@@ -33,6 +34,7 @@ export function Navigation() {
       }
       setLastScrollY(currentScrollY);
 
+      // Active section detection
       const sections = navItems.map((item) => item.href.replace("#", ""));
       for (const section of sections.reverse()) {
         const element = document.getElementById(section);
@@ -46,7 +48,7 @@ export function Navigation() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -66,13 +68,23 @@ export function Navigation() {
         initial={{ y: -100 }}
         animate={{ y: isNavVisible ? 0 : -100 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out border-b ${
-          isAtTop
-            ? "bg-transparent backdrop-blur-none border-transparent shadow-none"
-            : "bg-white/95 backdrop-blur-xl border-neutral-200 shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50"
       >
-        <nav className="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+        {/* Background layer - separate from content for clean animation */}
+        <div
+          className={`absolute inset-0 transition-all duration-300 ease-out ${
+            isScrolled
+              ? "bg-[#fafafa] border-b border-[#e5e5e5] shadow-[0_1px_3px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.04)]"
+              : "bg-transparent border-b border-transparent"
+          }`}
+          style={{
+            backdropFilter: isScrolled ? "blur(12px)" : "none",
+            WebkitBackdropFilter: isScrolled ? "blur(12px)" : "none",
+          }}
+        />
+
+        {/* Content layer */}
+        <nav className="relative max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
           <MagneticButton strength={0.2}>
             <a
               href="#hero"
@@ -157,11 +169,11 @@ export function Navigation() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(18px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/75 md:hidden"
+            className="fixed inset-0 z-40 bg-background/90 backdrop-blur-xl md:hidden"
           >
             <motion.nav
               initial={{ opacity: 0, y: 20 }}
