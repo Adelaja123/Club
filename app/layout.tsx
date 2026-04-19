@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
   description:
-    "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and even Advanced HTML 5 and CSS 3. Award-winning developer crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
+    "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
   keywords: [
     "full stack developer Lagos",
     "Next.js developer Nigeria",
@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     "React",
     "TypeScript",
     "software engineer Nigeria",
-    "HTML and CSS expert",
   ],
   authors: [{ name: "Oluwagbotemi Adelaja" }],
   openGraph: {
@@ -69,7 +68,7 @@ export default function RootLayout({
     url: baseUrl,
     jobTitle: "Full Stack Developer",
     description:
-      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and even Advanced HTML 5 and CSS 3",
+      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript.",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Lagos",
@@ -78,8 +77,6 @@ export default function RootLayout({
     sameAs: [
       "https://github.com/Adelaja123",
       "https://linkedin.com/in/oluwagbotemi-adelaja",
-      "https://x.com/gbotemi8054",
-      "https://www.instagram.com/oluwagbotemi.io?igsh=bWtheXFpbWVjZdN2",
     ],
   };
 
