@@ -45,9 +45,9 @@ export function AboutSection() {
                 className="object-cover object-top"
                 priority
               />
-              
+
               {/* Decorative code snippet overlay */}
-              <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-sm rounded-xl p-4 font-mono text-xs text-muted-foreground border border-border">
+              {/* <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-sm rounded-xl p-4 font-mono text-xs text-muted-foreground border border-border">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-3 h-3 rounded-full bg-red-400/60" />
                   <span className="w-3 h-3 rounded-full bg-yellow-400/60" />
@@ -68,7 +68,7 @@ export function AboutSection() {
                   <br />
                   {"}"};
                 </code>
-              </div>
+              </div> */}
             </div>
 
             {/* Floating badge */}
@@ -98,16 +98,16 @@ export function AboutSection() {
               </RevealText>
               <RevealText delay={0.3}>
                 <p className="text-muted-foreground leading-relaxed text-lg">
-                  I&apos;m a full-stack developer with over 5 years of experience creating 
-                  digital solutions that combine technical excellence with thoughtful design. 
-                  My approach focuses on writing clean, maintainable code while delivering 
+                  I&apos;m a full-stack developer with over 5 years of experience creating
+                  digital solutions that combine technical excellence with thoughtful design.
+                  My approach focuses on writing clean, maintainable code while delivering
                   exceptional user experiences.
                 </p>
               </RevealText>
               <RevealText delay={0.4}>
                 <p className="text-muted-foreground leading-relaxed text-lg mt-4">
-                  When I&apos;m not coding, you&apos;ll find me exploring new technologies, 
-                  contributing to open-source projects, or sharing knowledge through 
+                  When I&apos;m not coding, you&apos;ll find me exploring new technologies,
+                  contributing to open-source projects, or sharing knowledge through
                   technical writing and mentorship.
                 </p>
               </RevealText>
