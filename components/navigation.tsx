@@ -89,160 +89,172 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
+  const mobileBrand = (
+    <MagneticButton strength={0.2}>
+      <a
+        href="#hero"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToSection("#hero");
+        }}
+        className="text-base font-medium tracking-tight sm:text-lg"
+      >
+        Oluwagbotemi
+        <span className="text-muted-foreground">.io</span>
+      </a>
+    </MagneticButton>
+  );
+
+  const menuToggle = (
+    <button
+      type="button"
+      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+      aria-expanded={isMobileMenuOpen}
+      aria-controls="site-menu"
+      className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
+    >
+      .Menu
+    </button>
+  );
+
+  const floatingCompactToggle = (
+    <motion.button
+      key="compact-hamburger"
+      type="button"
+      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+      aria-expanded={isMobileMenuOpen}
+      aria-controls="site-menu"
+      initial={{ opacity: 0, scale: 0.82, y: 14 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.82, y: 14 }}
+      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.96 }}
+      className="fixed right-4 top-4 z-[60] inline-flex h-16 w-16 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:right-6 sm:top-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:right-8 lg:top-8 lg:h-[5rem] lg:w-[5rem]"
+    >
+      <span className="sr-only">
+        {isMobileMenuOpen ? "Close menu" : "Open menu"}
+      </span>
+
+      <div className="flex flex-col items-center justify-center gap-1.5">
+        <motion.span
+          animate={
+            isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
+          }
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          className="h-0.5 w-7 origin-center bg-background sm:w-8"
+        />
+        <motion.span
+          animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 0.18 }}
+          className="h-0.5 w-7 bg-background sm:w-8"
+        />
+        <motion.span
+          animate={
+            isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+          }
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          className="h-0.5 w-7 origin-center bg-background sm:w-8"
+        />
+      </div>
+    </motion.button>
+  );
+
   return (
     <>
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-0 left-0 right-0 z-50"
-      >
-        <div
-          className={isCompactNav ? "bg-background" : "bg-transparent"}
-          style={{
-            backdropFilter: "none",
-            WebkitBackdropFilter: "none",
-          }}
+      {!isCompactNav ? (
+        <motion.header
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed left-0 right-0 top-0 z-50"
         >
-          <nav
-            className={`relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 ${isCompactNav
-                ? "flex h-24 items-start justify-end sm:h-28"
-                : "flex h-16 items-center justify-end md:h-auto md:justify-between md:py-4 lg:py-5"
-              }`}
+          <div
+            className="bg-transparent"
+            style={{
+              backdropFilter: "none",
+              WebkitBackdropFilter: "none",
+            }}
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {!isCompactNav ? (
-                <motion.div
-                  key="hero-state"
-                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex w-full items-center justify-end md:justify-between"
-                >
-                  <div className="md:hidden">
-                    <button
-                      type="button"
-                      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-                      aria-expanded={isMobileMenuOpen}
-                      aria-controls="site-menu"
-                      className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
+            <nav className="relative mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-12 lg:py-5">
+              <motion.div
+                key="hero-state"
+                initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="flex w-full flex-col items-start justify-end gap-3 md:flex-row md:items-center md:justify-between"
+              >
+                <div className="flex w-full items-center justify-between md:hidden">
+                  {mobileBrand}
+                  {menuToggle}
+                </div>
+
+                <div className="hidden md:flex md:w-full md:items-center md:justify-between">
+                  <MagneticButton strength={0.2}>
+                    <a
+                      href="#hero"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToSection("#hero");
+                      }}
+                      className="text-lg font-medium tracking-tight"
                     >
-                      .Menu
-                    </button>
-                  </div>
+                      Oluwagbotemi
+                      <span className="text-muted-foreground">.io</span>
+                    </a>
+                  </MagneticButton>
 
-                  <div className="hidden md:flex md:w-full md:items-center md:justify-between">
-                    <MagneticButton strength={0.2}>
-                      <a
-                        href="#hero"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          scrollToSection("#hero");
-                        }}
-                        className="text-lg font-medium tracking-tight"
-                      >
-                        Oluwagbotemi
-                        <span className="text-muted-foreground">.io</span>
-                      </a>
-                    </MagneticButton>
-
-                    <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-8">
-                      {navItems.map((item) => (
-                        <li key={item.href}>
-                          <MagneticButton strength={0.15}>
-                            <a
-                              href={item.href}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                scrollToSection(item.href);
-                              }}
-                              className={`relative text-sm tracking-wide transition-colors group ${activeSection === item.href.replace("#", "")
-                                  ? "text-foreground"
-                                  : "text-muted-foreground hover:text-foreground"
+                  <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-8">
+                    {navItems.map((item) => (
+                      <li key={item.href}>
+                        <MagneticButton strength={0.15}>
+                          <a
+                            href={item.href}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              scrollToSection(item.href);
+                            }}
+                            className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
+                                ? "text-foreground"
+                                : "text-muted-foreground hover:text-foreground"
+                              }`}
+                          >
+                            {item.label}
+                            <span
+                              className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
+                                  ? "w-full"
+                                  : "w-0 group-hover:w-full"
                                 }`}
-                            >
-                              {item.label}
-                              <span
-                                className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                    ? "w-full"
-                                    : "w-0 group-hover:w-full"
-                                  }`}
-                              />
-                            </a>
-                          </MagneticButton>
-                        </li>
-                      ))}
-                    </ul>
+                            />
+                          </a>
+                        </MagneticButton>
+                      </li>
+                    ))}
+                  </ul>
 
-                    <MagneticButton strength={0.2}>
-                      <a
-                        href="#contact"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          scrollToSection("#contact");
-                        }}
-                        className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90"
-                      >
-                        Get in Touch
-                      </a>
-                    </MagneticButton>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.button
-                  key="compact-hamburger"
-                  type="button"
-                  onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                  aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-                  aria-expanded={isMobileMenuOpen}
-                  aria-controls="site-menu"
-                  initial={{ opacity: 0, scale: 0.82, y: 14 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.82, y: 14 }}
-                  transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="mt-6 inline-flex h-16 w-16 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:h-[4.5rem] sm:w-[4.5rem] sm:mt-7 lg:h-[5rem] lg:w-[5rem] lg:mt-8"
-                >
-                  <span className="sr-only">
-                    {isMobileMenuOpen ? "Close menu" : "Open menu"}
-                  </span>
-
-                  <div className="flex flex-col items-center justify-center gap-1.5">
-                    <motion.span
-                      animate={
-                        isMobileMenuOpen
-                          ? { rotate: 45, y: 6 }
-                          : { rotate: 0, y: 0 }
-                      }
-                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      className="h-0.5 w-7 origin-center bg-background sm:w-8"
-                    />
-                    <motion.span
-                      animate={
-                        isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }
-                      }
-                      transition={{ duration: 0.18 }}
-                      className="h-0.5 w-7 bg-background sm:w-8"
-                    />
-                    <motion.span
-                      animate={
-                        isMobileMenuOpen
-                          ? { rotate: -45, y: -6 }
-                          : { rotate: 0, y: 0 }
-                      }
-                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      className="h-0.5 w-7 origin-center bg-background sm:w-8"
-                    />
-                  </div>
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </nav>
-        </div>
-      </motion.header>
+                  <MagneticButton strength={0.2}>
+                    <a
+                      href="#contact"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToSection("#contact");
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90"
+                    >
+                      Get in Touch
+                    </a>
+                  </MagneticButton>
+                </div>
+              </motion.div>
+            </nav>
+          </div>
+        </motion.header>
+      ) : (
+        floatingCompactToggle
+      )}
 
       <AnimatePresence>
         {isMobileMenuOpen && (
