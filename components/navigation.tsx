@@ -107,73 +107,88 @@ export function Navigation() {
           <nav
             className={`relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 ${isCompactNav
                 ? "flex h-24 items-start justify-end sm:h-28"
-                : "flex flex-col gap-4 py-4 sm:py-5 md:flex-row md:items-center md:justify-between"
+                : "flex h-16 items-center justify-end md:h-auto md:justify-between md:py-4 lg:py-5"
               }`}
           >
             <AnimatePresence mode="wait" initial={false}>
               {!isCompactNav ? (
                 <motion.div
-                  key="expanded-nav"
-                  initial={{ opacity: 0, y: -10, scale: 0.985 }}
+                  key="hero-state"
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.985 }}
-                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex w-full items-center justify-end md:justify-between"
                 >
-                  <MagneticButton strength={0.2}>
-                    <a
-                      href="#hero"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#hero");
-                      }}
-                      className="text-lg font-medium tracking-tight"
+                  <div className="md:hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                      aria-expanded={isMobileMenuOpen}
+                      aria-controls="site-menu"
+                      className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
                     >
-                      Oluwagbotemi
-                      <span className="text-muted-foreground">.io</span>
-                    </a>
-                  </MagneticButton>
+                      .Menu
+                    </button>
+                  </div>
 
-                  <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-8">
-                    {navItems.map((item) => (
-                      <li key={item.href}>
-                        <MagneticButton strength={0.15}>
-                          <a
-                            href={item.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              scrollToSection(item.href);
-                            }}
-                            className={`relative text-sm tracking-wide transition-colors group ${activeSection === item.href.replace("#", "")
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
-                              }`}
-                          >
-                            {item.label}
-                            <span
-                              className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                  ? "w-full"
-                                  : "w-0 group-hover:w-full"
+                  <div className="hidden md:flex md:w-full md:items-center md:justify-between">
+                    <MagneticButton strength={0.2}>
+                      <a
+                        href="#hero"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection("#hero");
+                        }}
+                        className="text-lg font-medium tracking-tight"
+                      >
+                        Oluwagbotemi
+                        <span className="text-muted-foreground">.io</span>
+                      </a>
+                    </MagneticButton>
+
+                    <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-8">
+                      {navItems.map((item) => (
+                        <li key={item.href}>
+                          <MagneticButton strength={0.15}>
+                            <a
+                              href={item.href}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                scrollToSection(item.href);
+                              }}
+                              className={`relative text-sm tracking-wide transition-colors group ${activeSection === item.href.replace("#", "")
+                                  ? "text-foreground"
+                                  : "text-muted-foreground hover:text-foreground"
                                 }`}
-                            />
-                          </a>
-                        </MagneticButton>
-                      </li>
-                    ))}
-                  </ul>
+                            >
+                              {item.label}
+                              <span
+                                className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                                  }`}
+                              />
+                            </a>
+                          </MagneticButton>
+                        </li>
+                      ))}
+                    </ul>
 
-                  <MagneticButton strength={0.2}>
-                    <a
-                      href="#contact"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#contact");
-                      }}
-                      className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90"
-                    >
-                      Get in Touch
-                    </a>
-                  </MagneticButton>
+                    <MagneticButton strength={0.2}>
+                      <a
+                        href="#contact"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection("#contact");
+                        }}
+                        className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90"
+                      >
+                        Get in Touch
+                      </a>
+                    </MagneticButton>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.button
@@ -230,7 +245,7 @@ export function Navigation() {
       </motion.header>
 
       <AnimatePresence>
-        {isCompactNav && isMobileMenuOpen && (
+        {isMobileMenuOpen && (
           <motion.div
             id="site-menu"
             initial={{ opacity: 0 }}
