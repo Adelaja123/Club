@@ -89,78 +89,7 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
-  const mobileBrand = (
-    <MagneticButton strength={0.2}>
-      <a
-        href="#hero"
-        onClick={(e) => {
-          e.preventDefault();
-          scrollToSection("#hero");
-        }}
-        className="text-base font-medium tracking-tight sm:text-lg"
-      >
-        Oluwagbotemi
-        <span className="text-muted-foreground">.io</span>
-      </a>
-    </MagneticButton>
-  );
-
-  const menuToggle = (
-    <button
-      type="button"
-      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-      aria-expanded={isMobileMenuOpen}
-      aria-controls="site-menu"
-      className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
-    >
-      .Menu
-    </button>
-  );
-
-  const floatingCompactToggle = (
-    <motion.button
-      key="compact-hamburger"
-      type="button"
-      onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-      aria-expanded={isMobileMenuOpen}
-      aria-controls="site-menu"
-      initial={{ opacity: 0, scale: 0.82, y: 14 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.82, y: 14 }}
-      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.96 }}
-      className="fixed right-4 top-4 z-[60] inline-flex h-16 w-16 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:right-6 sm:top-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:right-8 lg:top-8 lg:h-[5rem] lg:w-[5rem]"
-    >
-      <span className="sr-only">
-        {isMobileMenuOpen ? "Close menu" : "Open menu"}
-      </span>
-
-      <div className="flex flex-col items-center justify-center gap-1.5">
-        <motion.span
-          animate={
-            isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
-          }
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="h-0.5 w-7 origin-center bg-background sm:w-8"
-        />
-        <motion.span
-          animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.18 }}
-          className="h-0.5 w-7 bg-background sm:w-8"
-        />
-        <motion.span
-          animate={
-            isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
-          }
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="h-0.5 w-7 origin-center bg-background sm:w-8"
-        />
-      </div>
-    </motion.button>
-  );
+  const shouldShowCompactToggle = isCompactNav && !isMobileMenuOpen;
 
   return (
     <>
@@ -188,8 +117,30 @@ export function Navigation() {
                 className="flex w-full flex-col items-start justify-end gap-3 md:flex-row md:items-center md:justify-between"
               >
                 <div className="flex w-full items-center justify-between md:hidden">
-                  {mobileBrand}
-                  {menuToggle}
+                  <MagneticButton strength={0.2}>
+                    <a
+                      href="#hero"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToSection("#hero");
+                      }}
+                      className="text-base font-medium tracking-tight sm:text-lg"
+                    >
+                      Oluwagbotemi
+                      <span className="text-muted-foreground">.io</span>
+                    </a>
+                  </MagneticButton>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                    aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                    aria-expanded={isMobileMenuOpen}
+                    aria-controls="site-menu"
+                    className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
+                  >
+                    .Menu
+                  </button>
                 </div>
 
                 <div className="hidden md:flex md:w-full md:items-center md:justify-between">
@@ -252,9 +203,51 @@ export function Navigation() {
             </nav>
           </div>
         </motion.header>
-      ) : (
-        floatingCompactToggle
-      )}
+      ) : null}
+
+      {shouldShowCompactToggle ? (
+        <motion.button
+          key="compact-hamburger"
+          type="button"
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="site-menu"
+          initial={{ opacity: 0, scale: 0.82, y: 14 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.82, y: 14 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
+          className="fixed right-4 top-4 z-[60] inline-flex h-16 w-16 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:right-6 sm:top-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:right-8 lg:top-8 lg:h-[5rem] lg:w-[5rem]"
+        >
+          <span className="sr-only">
+            {isMobileMenuOpen ? "Close menu" : "Open menu"}
+          </span>
+
+          <div className="flex flex-col items-center justify-center gap-1.5">
+            <motion.span
+              animate={
+                isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
+              }
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="h-0.5 w-7 origin-center bg-background sm:w-8"
+            />
+            <motion.span
+              animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.18 }}
+              className="h-0.5 w-7 bg-background sm:w-8"
+            />
+            <motion.span
+              animate={
+                isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+              }
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="h-0.5 w-7 origin-center bg-background sm:w-8"
+            />
+          </div>
+        </motion.button>
+      ) : null}
 
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -264,7 +257,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-40 bg-background"
+            className="fixed inset-0 z-[70] bg-background"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.nav
