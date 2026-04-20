@@ -176,15 +176,15 @@ export function Navigation() {
                               scrollToSection(item.href);
                             }}
                             className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             {item.label}
                             <span
                               className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                  ? "w-full"
-                                  : "w-0 group-hover:w-full"
+                                ? "w-full"
+                                : "w-0 group-hover:w-full"
                                 }`}
                             />
                           </a>
@@ -328,14 +328,14 @@ export function Navigation() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.05 + i * 0.05 }}
                             className={`group flex items-start gap-4 break-words text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.9] tracking-[-0.05em] transition-colors ${isActive
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             <span
                               className={`mt-3 h-2.5 w-2.5 rounded-full transition-all duration-300 ${isActive
-                                  ? "scale-100 bg-foreground"
-                                  : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
+                                ? "scale-100 bg-foreground"
+                                : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
                                 }`}
                             />
                             <span className="block">{item.label}</span>
