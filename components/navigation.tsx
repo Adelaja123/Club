@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MagneticButton } from "./magnetic-button";
 
 const navItems = [
+  { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Services", href: "#services" },
@@ -13,33 +14,45 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: "Awwwards", href: "https://www.awwwards.com/" },
-  { label: "Instagram", href: "https://www.instagram.com/" },
-  { label: "Twitter", href: "https://x.com/" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/" },
+  { label: "Github", href: "https://github.com/Adelaja123/" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/oluwagbotemi-adelaja-230b47400",
+  },
+  { label: "Twitter", href: "https://x.com/gbotemi8054" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/oluwagbotemi.io?igsh=bWtheXFpbWVjZd",
+  },
 ];
+
+const sectionIds = Array.from(
+  new Set(["hero", ...navItems.map((item) => item.href.replace("#", ""))]),
+);
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isCompactNav, setIsCompactNav] = useState(false);
 
+  const scrollRafRef = useRef<number | null>(null);
+  const stateCacheRef = useRef({
+    activeSection: "hero",
+    isCompactNav: false,
+  });
+
   useEffect(() => {
-    const scrollContainer =
+    const scrollContainer: Window | HTMLElement =
       document.querySelector<HTMLElement>(".snap-container") ?? window;
 
-    const handleScroll = () => {
+    const updateNavState = () => {
       const aboutElement = document.getElementById("about");
+      const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
+      const nextCompactNav = aboutTop <= 96;
 
-      if (aboutElement) {
-        const aboutRect = aboutElement.getBoundingClientRect();
-        setIsCompactNav(aboutRect.top <= 96);
-      }
-
-      const sections = ["hero", ...navItems.map((item) => item.href.slice(1))];
       let nextActiveSection = "hero";
 
-      for (const section of [...sections].reverse()) {
+      for (const section of [...sectionIds].reverse()) {
         const element = document.getElementById(section);
         if (!element) continue;
 
@@ -50,21 +63,42 @@ export function Navigation() {
         }
       }
 
-      setActiveSection(nextActiveSection);
+      const previous = stateCacheRef.current;
+
+      if (previous.isCompactNav !== nextCompactNav) {
+        previous.isCompactNav = nextCompactNav;
+        setIsCompactNav(nextCompactNav);
+      }
+
+      if (previous.activeSection !== nextActiveSection) {
+        previous.activeSection = nextActiveSection;
+        setActiveSection(nextActiveSection);
+      }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll as EventListener, {
+    const scheduleUpdate = () => {
+      if (scrollRafRef.current !== null) return;
+
+      scrollRafRef.current = window.requestAnimationFrame(() => {
+        scrollRafRef.current = null;
+        updateNavState();
+      });
+    };
+
+    scrollContainer.addEventListener("scroll", scheduleUpdate, {
       passive: true,
     });
-    window.addEventListener("resize", handleScroll);
-    handleScroll();
+    window.addEventListener("resize", scheduleUpdate);
+
+    scheduleUpdate();
 
     return () => {
-      scrollContainer.removeEventListener(
-        "scroll",
-        handleScroll as EventListener,
-      );
-      window.removeEventListener("resize", handleScroll);
+      scrollContainer.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+      }
     };
   }, []);
 
@@ -92,7 +126,12 @@ export function Navigation() {
 
   const scrollToSection = (href: string) => {
     const element = document.getElementById(href.replace("#", ""));
-    element?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     setIsMobileMenuOpen(false);
   };
 
@@ -144,9 +183,9 @@ export function Navigation() {
                     aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                     aria-expanded={isMobileMenuOpen}
                     aria-controls="site-menu"
-                    className="inline-flex items-center px-1 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
+                    className="inline-flex items-center px-2 py-2 text-sm font-medium tracking-[0.18em] text-foreground transition-opacity duration-200 hover:opacity-70"
                   >
-                    .Menu
+                    <li></li> NAV
                   </button>
                 </div>
 
@@ -176,15 +215,15 @@ export function Navigation() {
                               scrollToSection(item.href);
                             }}
                             className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
-                              ? "text-foreground"
-                              : "text-muted-foreground hover:text-foreground"
+                                ? "text-foreground"
+                                : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             {item.label}
                             <span
                               className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                ? "w-full"
-                                : "w-0 group-hover:w-full"
+                                  ? "w-full"
+                                  : "w-0 group-hover:w-full"
                                 }`}
                             />
                           </a>
@@ -226,7 +265,11 @@ export function Navigation() {
           transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.96 }}
-          className="fixed right-4 top-4 z-[60] inline-flex h-16 w-16 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:right-6 sm:top-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:right-8 lg:top-8 lg:h-[5rem] lg:w-[5rem]"
+          className="fixed right-4 top-4 z-[90] inline-flex h-16 w-16 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-[0_16px_40px_rgba(0,0,0,0.22)] sm:right-6 sm:top-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:right-8 lg:top-8 lg:h-[5rem] lg:w-[5rem]"
+          style={{
+            isolation: "isolate",
+            backgroundColor: "var(--background)",
+          }}
         >
           <span className="sr-only">
             {isMobileMenuOpen ? "Close menu" : "Open menu"}
@@ -238,19 +281,19 @@ export function Navigation() {
                 isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
               }
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="h-0.5 w-7 origin-center bg-background sm:w-8"
+              className="h-0.5 w-7 origin-center bg-current sm:w-8"
             />
             <motion.span
               animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.18 }}
-              className="h-0.5 w-7 bg-background sm:w-8"
+              className="h-0.5 w-7 bg-current sm:w-8"
             />
             <motion.span
               animate={
                 isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
               }
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="h-0.5 w-7 origin-center bg-background sm:w-8"
+              className="h-0.5 w-7 origin-center bg-current sm:w-8"
             />
           </div>
         </motion.button>
@@ -264,7 +307,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-[70] bg-background/35 backdrop-blur-[2px]"
+            className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-md lg:bg-black/80"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.nav
@@ -303,15 +346,15 @@ export function Navigation() {
                 </button>
               </div>
 
-              <div className="mt-10 flex flex-1 flex-col justify-between gap-10 lg:mt-14">
+              <div className="mt-10 flex flex-1 flex-col justify-between gap-1 lg:mt-1">
                 <section className="space-y-6">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                  {/* <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
                     Navigation
-                  </p>
+                  </p> */}
 
                   <div className="h-px w-full bg-foreground/10" />
 
-                  <ul className="space-y-3 sm:space-y-4 lg:space-y-5">
+                  <ul className="space-y-5 sm:space-y-6 lg:space-y-1">
                     {navItems.map((item, i) => {
                       const isActive =
                         activeSection === item.href.replace("#", "");
@@ -327,15 +370,15 @@ export function Navigation() {
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.05 + i * 0.05 }}
-                            className={`group flex items-start gap-4 break-words text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.9] tracking-[-0.05em] transition-colors ${isActive
-                              ? "text-foreground"
-                              : "text-muted-foreground hover:text-foreground"
+                            className={`group flex items-start gap-4 break-words py-2 text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.92] tracking-[-0.05em] transition-colors sm:gap-6 sm:py-3 ${isActive
+                                ? "text-foreground"
+                                : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             <span
                               className={`mt-3 h-2.5 w-2.5 rounded-full transition-all duration-300 ${isActive
-                                ? "scale-100 bg-foreground"
-                                : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
+                                  ? "scale-100 bg-foreground"
+                                  : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
                                 }`}
                             />
                             <span className="block">{item.label}</span>
