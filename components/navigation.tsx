@@ -12,6 +12,13 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
+const socialLinks = [
+  { label: "Awwwards", href: "https://www.awwwards.com/" },
+  { label: "Instagram", href: "https://www.instagram.com/" },
+  { label: "Twitter", href: "https://x.com/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/" },
+];
+
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
@@ -169,15 +176,15 @@ export function Navigation() {
                               scrollToSection(item.href);
                             }}
                             className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             {item.label}
                             <span
                               className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                  ? "w-full"
-                                  : "w-0 group-hover:w-full"
+                                ? "w-full"
+                                : "w-0 group-hover:w-full"
                                 }`}
                             />
                           </a>
@@ -257,15 +264,15 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-[70] bg-background"
+            className="fixed inset-0 z-[70] bg-background/35 backdrop-blur-[2px]"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.nav
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 24 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="flex h-full flex-col px-6 py-6 sm:px-8 sm:py-8"
+              className="ml-auto flex h-full w-full flex-col overflow-y-auto border-foreground/10 bg-background px-6 py-6 sm:px-8 sm:py-8 lg:w-[34vw] lg:min-w-[420px] lg:max-w-none lg:border-l lg:px-10 lg:py-10 xl:w-[32vw] 2xl:w-[30vw]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
@@ -285,7 +292,7 @@ export function Navigation() {
 
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-foreground"
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-foreground transition-opacity hover:opacity-70"
                   aria-label="Close menu"
                 >
                   <span className="sr-only">Close menu</span>
@@ -296,46 +303,69 @@ export function Navigation() {
                 </button>
               </div>
 
-              <div className="flex flex-1 flex-col justify-center gap-8">
-                {navItems.map((item, i) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(item.href);
-                    }}
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 + i * 0.05 }}
-                    className={`text-3xl font-light tracking-tight sm:text-4xl ${activeSection === item.href.replace("#", "")
-                        ? "text-foreground"
-                        : "text-muted-foreground"
-                      }`}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
+              <div className="mt-10 flex flex-1 flex-col justify-between gap-10 lg:mt-14">
+                <section className="space-y-6">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                    Navigation
+                  </p>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  className="pt-2"
-                >
-                  <MagneticButton strength={0.2}>
-                    <a
-                      href="#contact"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#contact");
-                      }}
-                      className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-all hover:bg-foreground/90"
-                    >
-                      Get in Touch
-                    </a>
-                  </MagneticButton>
-                </motion.div>
+                  <div className="h-px w-full bg-foreground/10" />
+
+                  <ul className="space-y-3 sm:space-y-4 lg:space-y-5">
+                    {navItems.map((item, i) => {
+                      const isActive =
+                        activeSection === item.href.replace("#", "");
+
+                      return (
+                        <li key={item.href}>
+                          <motion.a
+                            href={item.href}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              scrollToSection(item.href);
+                            }}
+                            initial={{ opacity: 0, y: 18 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.05 + i * 0.05 }}
+                            className={`group flex items-start gap-4 break-words text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.9] tracking-[-0.05em] transition-colors ${isActive
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground"
+                              }`}
+                          >
+                            <span
+                              className={`mt-3 h-2.5 w-2.5 rounded-full transition-all duration-300 ${isActive
+                                ? "scale-100 bg-foreground"
+                                : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
+                                }`}
+                            />
+                            <span className="block">{item.label}</span>
+                          </motion.a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+
+                <section className="space-y-6 border-t border-foreground/10 pt-6 lg:pt-8">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                    Socials
+                  </p>
+
+                  <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4 lg:flex lg:flex-wrap lg:gap-x-8 lg:gap-y-3">
+                    {socialLinks.map((item) => (
+                      <li key={item.label}>
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm font-medium text-foreground/90 transition-opacity hover:opacity-70"
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               </div>
             </motion.nav>
           </motion.div>
