@@ -1,7 +1,7 @@
 "use client"
 
-import { useRef, useState } from "react"
-import { motion } from "framer-motion"
+import { useRef, useCallback } from "react"
+import { motion, useMotionValue, useSpring } from "framer-motion"
 
 interface MagneticButtonProps {
   children: React.ReactNode
@@ -9,29 +9,43 @@ interface MagneticButtonProps {
   strength?: number
 }
 
+// Premium spring config inspired by Dennis Snellenberg
+const springConfig = {
+  stiffness: 150,
+  damping: 15,
+  mass: 0.1,
+}
+
 export function MagneticButton({ children, className = "", strength = 0.3 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  
+  const springX = useSpring(x, springConfig)
+  const springY = useSpring(y, springConfig)
 
-  const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouse = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
     const { clientX, clientY } = e
-    const { height, width, left, top } = ref.current!.getBoundingClientRect()
+    const { height, width, left, top } = ref.current.getBoundingClientRect()
     const middleX = clientX - (left + width / 2)
     const middleY = clientY - (top + height / 2)
-    setPosition({ x: middleX * strength, y: middleY * strength })
-  }
+    x.set(middleX * strength)
+    y.set(middleY * strength)
+  }, [strength, x, y])
 
-  const reset = () => {
-    setPosition({ x: 0, y: 0 })
-  }
+  const reset = useCallback(() => {
+    x.set(0)
+    y.set(0)
+  }, [x, y])
 
   return (
     <motion.div
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 350, damping: 15, mass: 0.5 }}
+      style={{ x: springX, y: springY }}
       className={className}
     >
       {children}

@@ -3,6 +3,10 @@
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { RevealText } from "../reveal-text"
+import { scrollToElement } from "../smooth-scroll"
+
+// Premium easing curve
+const premiumEase = [0.22, 1, 0.36, 1] as const;
 
 const services = [
   {
@@ -67,10 +71,11 @@ export function ServicesSection() {
           {services.map((service, i) => (
             <motion.div
               key={service.number}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+              transition={{ duration: 0.7, delay: 0.15 + i * 0.08, ease: premiumEase }}
               className="bg-background p-8 lg:p-10 group hover:bg-secondary/50 transition-colors duration-500"
+              style={{ willChange: "transform, opacity" }}
             >
               <div className="flex items-start justify-between mb-6">
                 <span className="text-5xl font-light text-muted-foreground/30">{service.number}</span>
@@ -108,8 +113,9 @@ export function ServicesSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          transition={{ duration: 0.7, delay: 0.5, ease: premiumEase }}
           className="mt-16 p-8 lg:p-12 bg-foreground text-background rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6"
+          style={{ willChange: "transform, opacity" }}
         >
           <div>
             <h3 className="text-2xl font-light tracking-tight mb-2">Have a project in mind?</h3>
@@ -119,9 +125,9 @@ export function ServicesSection() {
             href="#contact"
             onClick={(e) => { 
               e.preventDefault(); 
-              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }) 
+              scrollToElement("#contact");
             }}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all shrink-0 group"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-background text-foreground font-medium rounded-full hover:bg-background/90 transition-all duration-300 shrink-0 group"
           >
             Start a Conversation
             <svg 

@@ -1,6 +1,7 @@
 "use client"
 
 import { Navigation } from "@/components/navigation"
+import { SmoothScrollProvider } from "@/components/smooth-scroll"
 import { HeroSection } from "@/components/sections/hero"
 import { AboutSection } from "@/components/sections/about"
 import { ProjectsSection } from "@/components/sections/projects"
@@ -11,15 +12,17 @@ import { ContactSection } from "@/components/sections/contact"
 
 export default function Home() {
   return (
-    <main className="snap-container">
-      <Navigation />
-      <HeroSection />
-      <AboutSection />
-      <ProjectsSection />
-      <ServicesSection />
-      {/* <BlogSection /> */}
-      <TestimonialsSection />
-      <ContactSection />
-    </main>
+    <SmoothScrollProvider>
+      <main>
+        <Navigation />
+        <HeroSection />
+        <AboutSection />
+        <ProjectsSection />
+        <ServicesSection />
+        {/* <BlogSection /> */}
+        <TestimonialsSection />
+        <ContactSection />
+      </main>
+    </SmoothScrollProvider>
   )
 }

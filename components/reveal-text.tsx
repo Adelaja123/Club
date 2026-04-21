@@ -11,21 +11,24 @@ interface RevealTextProps {
   direction?: "up" | "down" | "left" | "right"
 }
 
+// Premium easing curve - Dennis Snellenberg style
+const premiumEase = [0.22, 1, 0.36, 1]
+
 export function RevealText({ 
   children, 
   className = "", 
   delay = 0, 
-  duration = 0.8,
+  duration = 0.9,
   direction = "up" 
 }: RevealTextProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
 
   const directionOffset = {
-    up: { y: 60, x: 0 },
-    down: { y: -60, x: 0 },
-    left: { x: 60, y: 0 },
-    right: { x: -60, y: 0 },
+    up: { y: 40, x: 0 },
+    down: { y: -40, x: 0 },
+    left: { x: 40, y: 0 },
+    right: { x: -40, y: 0 },
   }
 
   return (
@@ -43,8 +46,9 @@ export function RevealText({
         transition={{ 
           duration, 
           delay, 
-          ease: [0.25, 0.4, 0.25, 1] 
+          ease: premiumEase
         }}
+        style={{ willChange: "transform, opacity" }}
       >
         {children}
       </motion.div>
@@ -63,10 +67,10 @@ export function StaggerText({
   text, 
   className = "", 
   delay = 0,
-  staggerDelay = 0.03 
+  staggerDelay = 0.035 
 }: StaggerTextProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
   const words = text.split(" ")
 
   return (
@@ -75,13 +79,14 @@ export function StaggerText({
         <span key={i} className="overflow-hidden mr-[0.25em]">
           <motion.span
             className="inline-block"
-            initial={{ y: "100%" }}
-            animate={isInView ? { y: 0 } : {}}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={isInView ? { y: 0, opacity: 1 } : {}}
             transition={{
-              duration: 0.6,
+              duration: 0.7,
               delay: delay + i * staggerDelay,
-              ease: [0.25, 0.4, 0.25, 1],
+              ease: premiumEase,
             }}
+            style={{ willChange: "transform, opacity" }}
           >
             {word}
           </motion.span>
@@ -99,7 +104,7 @@ interface CharacterRevealProps {
 
 export function CharacterReveal({ text, className = "", delay = 0 }: CharacterRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
 
   return (
     <div ref={ref} className={className}>
@@ -107,13 +112,14 @@ export function CharacterReveal({ text, className = "", delay = 0 }: CharacterRe
         <motion.span
           key={i}
           className="inline-block"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{
-            duration: 0.4,
-            delay: delay + i * 0.02,
-            ease: [0.25, 0.4, 0.25, 1],
+            duration: 0.5,
+            delay: delay + i * 0.018,
+            ease: premiumEase,
           }}
+          style={{ willChange: "transform, opacity" }}
         >
           {char === " " ? "\u00A0" : char}
         </motion.span>

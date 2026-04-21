@@ -4,6 +4,9 @@ import { useRef, useState, useEffect } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import { RevealText } from "../reveal-text"
 
+// Premium easing curve
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 const testimonials = [
   {
     id: 1,
@@ -70,10 +73,11 @@ export function TestimonialsSection() {
 
         {/* Testimonial Carousel */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: premiumEase }}
           className="relative max-w-4xl mx-auto"
+          style={{ willChange: "transform, opacity" }}
         >
           {/* Quote Icon */}
           <div className="absolute -top-8 left-0 text-8xl text-muted-foreground/10 font-serif leading-none select-none">
@@ -85,10 +89,10 @@ export function TestimonialsSection() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.6, ease: premiumEase }}
                 className="text-center"
               >
                 <p className="text-2xl md:text-3xl font-light leading-relaxed mb-8 text-balance">
@@ -121,8 +125,9 @@ export function TestimonialsSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: premiumEase }}
           className="mt-20 pt-16 border-t border-border"
+          style={{ willChange: "transform, opacity" }}
         >
           <p className="text-center text-sm text-muted-foreground mb-8">
             Trusted by innovative companies worldwide

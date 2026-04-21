@@ -5,6 +5,9 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { RevealText } from "../reveal-text";
 
+// Premium easing curve
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 // const skills = [
 //   {
 //     category: "Frontend",
@@ -38,10 +41,11 @@ export function AboutSection() {
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
           {/* Left Column - Image/Visual */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{ duration: 0.9, ease: premiumEase }}
             className="relative"
+            style={{ willChange: "transform, opacity" }}
           >
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary">
               <Image
@@ -54,10 +58,11 @@ export function AboutSection() {
             </div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.7, delay: 0.5, ease: premiumEase }}
               className="absolute -right-4 -top-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background shadow-lg"
+              style={{ willChange: "transform, opacity" }}
             >
               Open to Work
             </motion.div>
@@ -139,16 +144,18 @@ export function AboutSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.9 }}
+              transition={{ duration: 0.7, delay: 0.6, ease: premiumEase }}
               className="grid grid-cols-2 gap-4 border-t border-border pt-8 sm:grid-cols-4 sm:gap-6"
+              style={{ willChange: "transform, opacity" }}
             >
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+                  transition={{ duration: 0.6, delay: 0.7 + i * 0.08, ease: premiumEase }}
                   className="min-w-0"
+                  style={{ willChange: "transform, opacity" }}
                 >
                   <div className="text-2xl font-light tracking-tight sm:text-3xl">
                     {stat.value}

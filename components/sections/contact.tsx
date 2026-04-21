@@ -6,6 +6,9 @@ import { RevealText } from "../reveal-text";
 import { MagneticButton } from "../magnetic-button";
 import { CONTACT_LINKS } from "@/lib/constants";
 
+// Premium easing curve
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 const socialLinks = [
   {
     name: "GitHub",
@@ -118,8 +121,9 @@ export function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: premiumEase }}
               className="space-y-4"
+              style={{ willChange: "transform, opacity" }}
             >
               <a
                 href="mailto:hello@oluwagbotemi.space"
@@ -133,8 +137,9 @@ export function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.5 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: premiumEase }}
               className="flex gap-6 mt-12"
+              style={{ willChange: "transform, opacity" }}
             >
               {socialLinks.map((link) => (
                 <MagneticButton key={link.name} strength={0.2}>
@@ -154,9 +159,10 @@ export function ContactSection() {
 
           {/* RIGHT SIDE */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: premiumEase }}
+            style={{ willChange: "transform, opacity" }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">

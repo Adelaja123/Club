@@ -5,6 +5,9 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import { RevealText } from "../reveal-text"
 import { MagneticButton } from "../magnetic-button"
 
+// Premium easing curve
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 const projects = [
   {
     id: 1,
@@ -83,15 +86,16 @@ export function ProjectsSection() {
           {projects.map((project, i) => (
             <motion.article
               key={project.id}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+              transition={{ duration: 0.7, delay: 0.15 + i * 0.08, ease: premiumEase }}
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
               className="group relative"
+              style={{ willChange: "transform, opacity" }}
             >
-              <div className={`relative overflow-hidden rounded-2xl ${project.color} p-8 lg:p-10 min-h-[400px] flex flex-col justify-between transition-all duration-500 ${
-                hoveredProject && hoveredProject !== project.id ? "opacity-50" : ""
+              <div className={`relative overflow-hidden rounded-2xl ${project.color} p-8 lg:p-10 min-h-[400px] flex flex-col justify-between transition-all duration-700 ease-out ${
+                hoveredProject && hoveredProject !== project.id ? "opacity-40 scale-[0.98]" : ""
               }`}>
                 {/* Project Content */}
                 <div>
@@ -162,14 +166,15 @@ export function ProjectsSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          transition={{ duration: 0.6, delay: 0.6, ease: premiumEase }}
           className="flex justify-center mt-12"
+          style={{ willChange: "transform, opacity" }}
         >
           <MagneticButton strength={0.15}>
-            <button className="inline-flex items-center gap-3 px-8 py-4 border border-border text-foreground font-medium rounded-full hover:bg-secondary transition-all group">
+            <button className="inline-flex items-center gap-3 px-8 py-4 border border-border text-foreground font-medium rounded-full hover:bg-secondary transition-all duration-300 group">
               View All Projects
               <svg 
-                className="w-4 h-4 transition-transform group-hover:translate-x-1" 
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"

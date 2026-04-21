@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MagneticButton } from "./magnetic-button";
+import { scrollToElement } from "./smooth-scroll";
 
 const navItems = [
   { label: "Home", href: "#hero" },
@@ -42,9 +43,6 @@ export function Navigation() {
   });
 
   useEffect(() => {
-    const scrollContainer: Window | HTMLElement =
-      document.querySelector<HTMLElement>(".snap-container") ?? window;
-
     const updateNavState = () => {
       const aboutElement = document.getElementById("about");
       const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
@@ -85,15 +83,14 @@ export function Navigation() {
       });
     };
 
-    scrollContainer.addEventListener("scroll", scheduleUpdate, {
-      passive: true,
-    });
+    // Listen to window scroll for Lenis smooth scroll
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
     scheduleUpdate();
 
     return () => {
-      scrollContainer.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
 
       if (scrollRafRef.current !== null) {
@@ -103,10 +100,19 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    const lenis = (window as any).__lenis;
+    
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      lenis?.stop();
+    } else {
+      document.body.style.overflow = "";
+      lenis?.start();
+    }
 
     return () => {
       document.body.style.overflow = "";
+      lenis?.start();
     };
   }, [isMobileMenuOpen]);
 
@@ -125,13 +131,7 @@ export function Navigation() {
   }, [isMobileMenuOpen]);
 
   const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.replace("#", ""));
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsMobileMenuOpen(false);
-      return;
-    }
-
+    scrollToElement(href);
     setIsMobileMenuOpen(false);
   };
 

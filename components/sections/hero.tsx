@@ -1,9 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { MagneticButton } from "../magnetic-button";
 import { StaggerText } from "../reveal-text";
+import { scrollToElement } from "../smooth-scroll";
+
+// Smooth spring config for scroll-linked animations
+const smoothSpring = { stiffness: 100, damping: 30, restDelta: 0.001 };
 
 export function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -11,17 +15,21 @@ export function HeroSection() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  
+  // Apply spring smoothing to scroll progress for premium feel
+  const smoothProgress = useSpring(scrollYProgress, smoothSpring);
+  
+  const indicatorOpacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
+  const opacity = useTransform(smoothProgress, [0, 0.4], [1, 0]);
+  const y = useTransform(smoothProgress, [0, 0.5], [0, 80]);
+  const scale = useTransform(smoothProgress, [0, 0.5], [1, 0.97]);
 
   return (
     <section
       ref={ref}
       id="hero"
       className="snap-section relative flex items-center justify-center overflow-hidden md:pt-20 lg:pt-24"
+      style={{ position: "relative" }}
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
@@ -83,7 +91,7 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
+          transition={{ duration: 0.8, delay: 1, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col sm:flex-row items-center justify-center gap-5 -mt-10"
         >
           <MagneticButton strength={0.15}>
@@ -91,15 +99,13 @@ export function HeroSection() {
               href="#projects"
               onClick={(e) => {
                 e.preventDefault();
-                document
-                  .querySelector("#projects")
-                  ?.scrollIntoView({ behavior: "smooth" });
+                scrollToElement("#projects");
               }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background font-medium rounded-full hover:bg-foreground/90 transition-all group"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background font-medium rounded-full hover:bg-foreground/90 transition-all duration-300 group"
             >
               View My Work
               <svg
-                className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -119,11 +125,9 @@ export function HeroSection() {
               href="#about"
               onClick={(e) => {
                 e.preventDefault();
-                document
-                  .querySelector("#about")
-                  ?.scrollIntoView({ behavior: "smooth" });
+                scrollToElement("#about");
               }}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-border text-foreground font-medium rounded-full hover:bg-secondary transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-border text-foreground font-medium rounded-full hover:bg-secondary transition-all duration-300"
             >
               Learn More
             </a>
