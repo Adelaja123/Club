@@ -208,7 +208,7 @@ export function ContactSection() {
 
               {success && (
                 <p className="text-sm text-green-400">
-                  Message sent successfully.
+                  Message sent successfully. Check your Mail
                 </p>
               )}
 
