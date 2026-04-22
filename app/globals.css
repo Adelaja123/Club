@@ -84,12 +84,7 @@
   background: oklch(0.6 0 0);
 }
 
-/* Snap scroll container - gentle snapping with Lenis */
-.snap-container {
-  overflow-y: scroll;
-  height: 100vh;
-}
-
+/* Sections — Lenis handles smooth scroll on window */
 .snap-section {
   min-height: 100vh;
 }

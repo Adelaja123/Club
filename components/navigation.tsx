@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { MagneticButton } from "./magnetic-button";
-import Lenis from "lenis";
 
 const navItems = [
   { label: "Home", href: "#hero", path: "/" },
@@ -140,11 +139,9 @@ export function Navigation() {
   const scrollToSection = (href: string) => {
     const element = document.getElementById(href.replace("#", ""));
     if (element) {
+      // Use native smooth scroll — Lenis intercepts and smooths it automatically
       element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsMobileMenuOpen(false);
-      return;
     }
-
     setIsMobileMenuOpen(false);
   };
 

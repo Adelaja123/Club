@@ -10,7 +10,7 @@ import { ContactSection } from "@/components/sections/contact"
 
 export default function Home() {
   return (
-    <main className="snap-container">
+    <main>
       <HeroSection />
       <AboutSection />
       <ProjectsSection />
