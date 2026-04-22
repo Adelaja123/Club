@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { MagneticButton } from "./magnetic-button";
+import { useLenisInstance } from "./lenis-provider";
 
 const navItems = [
   { label: "Home", href: "#hero", path: "/" },
@@ -39,25 +40,24 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isCompactNav, setIsCompactNav] = useState(false);
 
-  const scrollRafRef = useRef<number | null>(null);
+  const lenisRef = useLenisInstance();
   const stateCacheRef = useRef({
     activeSection: "hero",
     isCompactNav: false,
   });
 
   useEffect(() => {
-    const updateNavState = () => {
-      // For inner pages, switch to compact nav after scrolling past a threshold
-      // For homepage, use the about section as the trigger
+    const updateNavState = (scrollY: number) => {
       let nextCompactNav = false;
-      
+
       if (isHomepage) {
+        // Use the virtual scrollY value from Lenis — always accurate
         const aboutElement = document.getElementById("about");
-        const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
-        nextCompactNav = aboutTop <= 96;
+        const aboutOffset = aboutElement
+          ? (aboutElement as HTMLElement).offsetTop
+          : Infinity;
+        nextCompactNav = scrollY >= aboutOffset - 96;
       } else {
-        // On inner pages, switch to compact after scrolling 100px
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
         nextCompactNav = scrollY > 100;
       }
 
@@ -67,9 +67,8 @@ export function Navigation() {
         for (const section of [...sectionIds].reverse()) {
           const element = document.getElementById(section);
           if (!element) continue;
-
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom > 150) {
+          const offsetTop = (element as HTMLElement).offsetTop;
+          if (scrollY >= offsetTop - 160) {
             nextActiveSection = section;
             break;
           }
@@ -89,30 +88,41 @@ export function Navigation() {
       }
     };
 
-    const scheduleUpdate = () => {
-      if (scrollRafRef.current !== null) return;
+    // Lenis is initialized asynchronously inside a useEffect in LenisProvider.
+    // Poll until the instance is available, then subscribe to its scroll event.
+    let lenis = lenisRef?.current;
+    let rafId: number;
+    let lenisUnsub: (() => void) | null = null;
 
-      scrollRafRef.current = window.requestAnimationFrame(() => {
-        scrollRafRef.current = null;
-        updateNavState();
-      });
+    const onLenisScroll = ({ scroll }: { scroll: number }) => {
+      updateNavState(scroll);
     };
 
-    // Use window scroll event (Lenis handles smooth scrolling via requestAnimationFrame)
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-
-    scheduleUpdate();
-
-    return () => {
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-
-      if (scrollRafRef.current !== null) {
-        window.cancelAnimationFrame(scrollRafRef.current);
+    const trySubscribe = () => {
+      lenis = lenisRef?.current ?? null;
+      if (lenis) {
+        lenis.on("scroll", onLenisScroll);
+        lenisUnsub = () => lenis!.off("scroll", onLenisScroll);
+        updateNavState(lenis.scroll ?? 0);
+      } else {
+        // Lenis not ready yet — retry next frame
+        rafId = requestAnimationFrame(trySubscribe);
       }
     };
-  }, [isHomepage]);
+
+    trySubscribe();
+
+    // Plain window scroll as an immediate fallback (covers SSR hydration gap)
+    const onWindowScroll = () => updateNavState(window.scrollY);
+    window.addEventListener("scroll", onWindowScroll, { passive: true });
+    onWindowScroll();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenisUnsub?.();
+      window.removeEventListener("scroll", onWindowScroll);
+    };
+  }, [isHomepage, lenisRef]);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";

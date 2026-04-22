@@ -1,9 +1,36 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { useLenis } from '@/hooks/use-lenis';
+import { createContext, useContext, useEffect, useRef, ReactNode } from 'react';
+import Lenis from 'lenis';
+
+const LenisContext = createContext<React.RefObject<Lenis | null> | null>(null);
 
 export function LenisProvider({ children }: { children: ReactNode }) {
-  useLenis();
-  return <>{children}</>;
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.08,
+      smoothWheel: true,
+      syncTouch: false,
+      autoRaf: true,
+    });
+
+    lenisRef.current = lenis;
+
+    return () => {
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  return (
+    <LenisContext.Provider value={lenisRef}>
+      {children}
+    </LenisContext.Provider>
+  );
+}
+
+export function useLenisInstance() {
+  return useContext(LenisContext);
 }
