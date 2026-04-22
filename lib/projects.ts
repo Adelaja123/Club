@@ -41,7 +41,6 @@ export const projects: Project[] = [
     services: ["Full Stack Development", "UI/UX Design", "API Architecture"],
     techStack: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "Tailwind CSS", "Prisma"],
     repoUrl: "https://github.com/Adelaja123/financeflow",
-    liveUrl: "https://financeflow.demo",
     year: "2024",
     duration: "3 months",
     challenge:
@@ -66,7 +65,6 @@ export const projects: Project[] = [
     services: ["Full Stack Development", "Security Architecture", "DevOps"],
     techStack: ["Next.js", "WebRTC", "Redis", "Docker", "PostgreSQL", "Socket.io"],
     repoUrl: "https://github.com/Adelaja123/medconnect",
-    liveUrl: "https://medconnect.demo",
     year: "2024",
     duration: "4 months",
     challenge:
@@ -113,7 +111,7 @@ export const projects: Project[] = [
       "EcoTrack helps enterprises measure, report, and reduce their environmental impact. The platform aggregates data from multiple sources to provide comprehensive sustainability metrics, automated ESG reporting, and actionable recommendations for carbon reduction.",
     services: ["Full Stack Development", "Data Visualization", "API Integration"],
     techStack: ["Next.js", "Python", "AWS Lambda", "D3.js", "PostgreSQL", "Tailwind CSS"],
-    liveUrl: "https://ecotrack.demo",
+
     year: "2023",
     duration: "3 months",
     challenge:
@@ -137,7 +135,7 @@ export const projects: Project[] = [
     services: ["Full Stack Development", "Smart Contract Development", "Payment Integration"],
     techStack: ["Next.js", "Solidity", "IPFS", "Stripe", "Ethereum", "Tailwind CSS"],
     repoUrl: "https://github.com/Adelaja123/artistry",
-    liveUrl: "https://artistry.demo",
+
     year: "2024",
     duration: "4 months",
     challenge:

@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { MagneticButton } from "./magnetic-button";
 
 const navItems = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Services", href: "#services" },
-  // { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "#hero", path: "/" },
+  { label: "About", href: "#about", path: "/#about" },
+  { label: "Projects", href: "#projects", path: "/projects" },
+  { label: "Services", href: "#services", path: "/#services" },
+  { label: "Contact", href: "#contact", path: "/#contact" },
 ];
 
 const socialLinks = [
@@ -31,6 +32,9 @@ const sectionIds = Array.from(
 );
 
 export function Navigation() {
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
+  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isCompactNav, setIsCompactNav] = useState(false);
@@ -42,6 +46,12 @@ export function Navigation() {
   });
 
   useEffect(() => {
+    // Only run section detection on homepage
+    if (!isHomepage) {
+      setIsCompactNav(true);
+      return;
+    }
+
     const scrollContainer: Window | HTMLElement =
       document.querySelector<HTMLElement>(".snap-container") ?? window;
 
@@ -100,7 +110,7 @@ export function Navigation() {
         window.cancelAnimationFrame(scrollRafRef.current);
       }
     };
-  }, []);
+  }, [isHomepage]);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -135,6 +145,35 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
+  const handleNavClick = (e: React.MouseEvent, item: typeof navItems[0]) => {
+    if (isHomepage) {
+      // On homepage, use smooth scroll
+      e.preventDefault();
+      scrollToSection(item.href);
+    } else {
+      // On inner pages, let Link handle navigation
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  const getNavHref = (item: typeof navItems[0]) => {
+    if (isHomepage) {
+      return item.href;
+    }
+    return item.path;
+  };
+
+  const getActiveState = (item: typeof navItems[0]) => {
+    if (isHomepage) {
+      return activeSection === item.href.replace("#", "");
+    }
+    // On inner pages, check if current path matches
+    if (item.path === "/projects" && pathname.startsWith("/projects")) {
+      return true;
+    }
+    return pathname === item.path;
+  };
+
   const shouldShowCompactToggle = isCompactNav && !isMobileMenuOpen;
 
   return (
@@ -164,17 +203,19 @@ export function Navigation() {
               >
                 <div className="flex w-full items-center justify-between md:hidden">
                   <MagneticButton strength={0.2}>
-                    <a
-                      href="#hero"
+                    <Link
+                      href="/"
                       onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#hero");
+                        if (isHomepage) {
+                          e.preventDefault();
+                          scrollToSection("#hero");
+                        }
                       }}
                       className="text-base font-medium tracking-tight sm:text-lg"
                     >
                       Oluwagbotemi
                       <span className="text-muted-foreground">.io</span>
-                    </a>
+                    </Link>
                   </MagneticButton>
 
                   <button
@@ -191,58 +232,64 @@ export function Navigation() {
 
                 <div className="hidden md:flex md:w-full md:items-center md:justify-between">
                   <MagneticButton strength={0.2}>
-                    <a
-                      href="#hero"
+                    <Link
+                      href="/"
                       onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#hero");
+                        if (isHomepage) {
+                          e.preventDefault();
+                          scrollToSection("#hero");
+                        }
                       }}
                       className="text-lg font-medium tracking-tight"
                     >
                       Oluwagbotemi
                       <span className="text-muted-foreground">.io</span>
-                    </a>
+                    </Link>
                   </MagneticButton>
 
                   <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-8">
-                    {navItems.map((item) => (
-                      <li key={item.href}>
-                        <MagneticButton strength={0.15}>
-                          <a
-                            href={item.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              scrollToSection(item.href);
-                            }}
-                            className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
+                    {navItems.map((item) => {
+                      const isActive = getActiveState(item);
+                      return (
+                        <li key={item.href}>
+                          <MagneticButton strength={0.15}>
+                            <Link
+                              href={getNavHref(item)}
+                              onClick={(e) => handleNavClick(e, item)}
+                              className={`group relative text-sm tracking-wide transition-colors ${
+                                isActive
+                                  ? "text-foreground"
+                                  : "text-muted-foreground hover:text-foreground"
                               }`}
-                          >
-                            {item.label}
-                            <span
-                              className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
-                                  ? "w-full"
-                                  : "w-0 group-hover:w-full"
+                            >
+                              {item.label}
+                              <span
+                                className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
+                                  isActive
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
                                 }`}
-                            />
-                          </a>
-                        </MagneticButton>
-                      </li>
-                    ))}
+                              />
+                            </Link>
+                          </MagneticButton>
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   <MagneticButton strength={0.2}>
-                    <a
-                      href="#contact"
+                    <Link
+                      href={isHomepage ? "#contact" : "/#contact"}
                       onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection("#contact");
+                        if (isHomepage) {
+                          e.preventDefault();
+                          scrollToSection("#contact");
+                        }
                       }}
                       className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90"
                     >
                       Get in Touch
-                    </a>
+                    </Link>
                   </MagneticButton>
                 </div>
               </motion.div>
@@ -320,17 +367,21 @@ export function Navigation() {
             >
               <div className="flex items-center justify-between">
                 <MagneticButton strength={0.2}>
-                  <a
-                    href="#hero"
+                  <Link
+                    href="/"
                     onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection("#hero");
+                      if (isHomepage) {
+                        e.preventDefault();
+                        scrollToSection("#hero");
+                      } else {
+                        setIsMobileMenuOpen(false);
+                      }
                     }}
                     className="text-lg font-medium tracking-tight"
                   >
                     Oluwagbotemi
                     <span className="text-muted-foreground">.io</span>
-                  </a>
+                  </Link>
                 </MagneticButton>
 
                 <button
@@ -348,41 +399,38 @@ export function Navigation() {
 
               <div className="mt-10 flex flex-1 flex-col justify-between gap-1 lg:mt-1">
                 <section className="space-y-6">
-                  {/* <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-                    Navigation
-                  </p> */}
-
                   <div className="h-px w-full bg-foreground/10" />
 
                   <ul className="space-y-5 sm:space-y-6 lg:space-y-1">
                     {navItems.map((item, i) => {
-                      const isActive =
-                        activeSection === item.href.replace("#", "");
+                      const isActive = getActiveState(item);
 
                       return (
                         <li key={item.href}>
-                          <motion.a
-                            href={item.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              scrollToSection(item.href);
-                            }}
+                          <motion.div
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.05 + i * 0.05 }}
-                            className={`group flex items-start gap-4 break-words py-2 text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.92] tracking-[-0.05em] transition-colors sm:gap-6 sm:py-3 ${isActive
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
-                              }`}
                           >
-                            <span
-                              className={`mt-3 h-2.5 w-2.5 rounded-full transition-all duration-300 ${isActive
-                                  ? "scale-100 bg-foreground"
-                                  : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
+                            <Link
+                              href={getNavHref(item)}
+                              onClick={(e) => handleNavClick(e, item)}
+                              className={`group flex items-start gap-4 break-words py-2 text-[clamp(2.5rem,3.6vw,4.75rem)] leading-[0.92] tracking-[-0.05em] transition-colors sm:gap-6 sm:py-3 ${
+                                isActive
+                                  ? "text-foreground"
+                                  : "text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              <span
+                                className={`mt-3 h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                                  isActive
+                                    ? "scale-100 bg-foreground"
+                                    : "scale-75 bg-muted-foreground/40 group-hover:scale-100 group-hover:bg-foreground"
                                 }`}
-                            />
-                            <span className="block">{item.label}</span>
-                          </motion.a>
+                              />
+                              <span className="block">{item.label}</span>
+                            </Link>
+                          </motion.div>
                         </li>
                       );
                     })}

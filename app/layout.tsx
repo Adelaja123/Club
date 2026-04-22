@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { Navigation } from "@/components/navigation";
 import "./globals.css";
 
 const baseUrl = "https://oluwagbotemi.space";
@@ -92,6 +93,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
+        <Navigation />
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
