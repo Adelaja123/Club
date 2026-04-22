@@ -57,6 +57,7 @@ export function HeroSection() {
             text="Crafting Digital"
             className="justify-center"
             delay={0.3}
+            highlightWord="Digital"
           />
           <StaggerText
             text="Experiences"

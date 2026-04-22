@@ -57,13 +57,15 @@ interface StaggerTextProps {
   className?: string
   delay?: number
   staggerDelay?: number
+  highlightWord?: string
 }
 
 export function StaggerText({ 
   text, 
   className = "", 
   delay = 0,
-  staggerDelay = 0.03 
+  staggerDelay = 0.03,
+  highlightWord
 }: StaggerTextProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -75,6 +77,9 @@ export function StaggerText({
         <span key={i} className="overflow-hidden mr-[0.25em]">
           <motion.span
             className="inline-block"
+            style={
+              word === highlightWord ? { boxShadow: "0 25px 50px -12px rgb(0 0 0 / 0.25)" } : {}
+            }
             initial={{ y: "100%" }}
             animate={isInView ? { y: 0 } : {}}
             transition={{
