@@ -50,16 +50,9 @@ export function Navigation() {
     const updateNavState = (scrollY: number) => {
       let nextCompactNav = false;
 
-      if (isHomepage) {
-        // Use the virtual scrollY value from Lenis — always accurate
-        const aboutElement = document.getElementById("about");
-        const aboutOffset = aboutElement
-          ? (aboutElement as HTMLElement).offsetTop
-          : Infinity;
-        nextCompactNav = scrollY >= aboutOffset - 96;
-      } else {
-        nextCompactNav = scrollY > 100;
-      }
+      // Switch to hamburger early on all pages — after ~80px of scroll
+      // so the full nav never collides with page content
+      nextCompactNav = scrollY > 80;
 
       let nextActiveSection = "hero";
 
