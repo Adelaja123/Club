@@ -46,30 +46,36 @@ export function Navigation() {
   });
 
   useEffect(() => {
-    // Only run section detection on homepage
-    if (!isHomepage) {
-      setIsCompactNav(true);
-      return;
-    }
-
     const scrollContainer: Window | HTMLElement =
       document.querySelector<HTMLElement>(".snap-container") ?? window;
 
     const updateNavState = () => {
-      const aboutElement = document.getElementById("about");
-      const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
-      const nextCompactNav = aboutTop <= 96;
+      // For inner pages, switch to compact nav after scrolling past a threshold
+      // For homepage, use the about section as the trigger
+      let nextCompactNav = false;
+      
+      if (isHomepage) {
+        const aboutElement = document.getElementById("about");
+        const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
+        nextCompactNav = aboutTop <= 96;
+      } else {
+        // On inner pages, switch to compact after scrolling 100px
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        nextCompactNav = scrollY > 100;
+      }
 
       let nextActiveSection = "hero";
 
-      for (const section of [...sectionIds].reverse()) {
-        const element = document.getElementById(section);
-        if (!element) continue;
+      if (isHomepage) {
+        for (const section of [...sectionIds].reverse()) {
+          const element = document.getElementById(section);
+          if (!element) continue;
 
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 150 && rect.bottom > 150) {
-          nextActiveSection = section;
-          break;
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom > 150) {
+            nextActiveSection = section;
+            break;
+          }
         }
       }
 
@@ -98,12 +104,14 @@ export function Navigation() {
     scrollContainer.addEventListener("scroll", scheduleUpdate, {
       passive: true,
     });
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
     scheduleUpdate();
 
     return () => {
       scrollContainer.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
 
       if (scrollRafRef.current !== null) {
