@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MagneticButton } from "./magnetic-button";
 
@@ -31,17 +32,28 @@ const sectionIds = Array.from(
 );
 
 export function Navigation() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomepage = pathname === "/";
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [isCompactNav, setIsCompactNav] = useState(false);
+  const [isCompactNav, setIsCompactNav] = useState(!isHomepage);
 
   const scrollRafRef = useRef<number | null>(null);
   const stateCacheRef = useRef({
     activeSection: "hero",
-    isCompactNav: false,
+    isCompactNav: !isHomepage,
   });
 
   useEffect(() => {
+    // On inner pages, always show compact nav (hamburger button)
+    if (!isHomepage) {
+      setIsCompactNav(true);
+      setActiveSection("");
+      return;
+    }
+
     const scrollContainer: Window | HTMLElement =
       document.querySelector<HTMLElement>(".snap-container") ?? window;
 
@@ -100,7 +112,7 @@ export function Navigation() {
         window.cancelAnimationFrame(scrollRafRef.current);
       }
     };
-  }, []);
+  }, [isHomepage]);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -125,21 +137,27 @@ export function Navigation() {
   }, [isMobileMenuOpen]);
 
   const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.replace("#", ""));
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsMobileMenuOpen(false);
+    setIsMobileMenuOpen(false);
+
+    // If on homepage, scroll directly to the section
+    if (isHomepage) {
+      const element = document.getElementById(href.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
       return;
     }
 
-    setIsMobileMenuOpen(false);
+    // If on inner page, navigate to homepage with anchor
+    router.push(`/${href}`);
   };
 
   const shouldShowCompactToggle = isCompactNav && !isMobileMenuOpen;
+  const shouldShowExpandedHeader = isHomepage && !isCompactNav;
 
   return (
     <>
-      {!isCompactNav ? (
+      {shouldShowExpandedHeader ? (
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

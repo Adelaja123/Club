@@ -6,6 +6,7 @@ import Link from "next/link";
 import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/project-card";
 import { MagneticButton } from "@/components/magnetic-button";
+import { Navigation } from "@/components/navigation";
 
 export function ProjectsPageContent() {
   const ref = useRef<HTMLDivElement>(null);
@@ -13,28 +14,8 @@ export function ProjectsPageContent() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
-          <MagneticButton strength={0.1}>
-            <Link
-              href="/"
-              className="text-sm font-medium hover:text-muted-foreground transition-colors"
-            >
-              Oluwagbotemi Adelaja
-            </Link>
-          </MagneticButton>
-
-          <MagneticButton strength={0.1}>
-            <Link
-              href="/#contact"
-              className="text-sm font-medium hover:text-muted-foreground transition-colors"
-            >
-              Contact
-            </Link>
-          </MagneticButton>
-        </div>
-      </header>
+      {/* Navigation */}
+      <Navigation />
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-6 lg:px-12">
