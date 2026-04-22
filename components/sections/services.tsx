@@ -39,9 +39,9 @@ export function ServicesSection() {
     <section
       ref={ref}
       id="services"
-      className="snap-section relative py-32"
+      className="snap-section relative py-16 md:py-24 lg:py-32"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <RevealText delay={0.1}>
@@ -50,7 +50,7 @@ export function ServicesSection() {
             </span>
           </RevealText>
           <RevealText delay={0.2}>
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 text-balance">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-6 text-balance">
               Services & Expertise
             </h2>
           </RevealText>
@@ -63,14 +63,14 @@ export function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-px bg-border rounded-2xl overflow-hidden">
+        <div className="grid sm:grid-cols-2 gap-px bg-border rounded-2xl overflow-hidden">
           {services.map((service, i) => (
             <motion.div
               key={service.number}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-              className="bg-background p-8 lg:p-10 group hover:bg-secondary/50 transition-colors duration-500"
+              className="bg-background p-6 sm:p-8 lg:p-10 group hover:bg-secondary/50 transition-colors duration-500"
             >
               <div className="flex items-start justify-between mb-6">
                 <span className="text-5xl font-light text-muted-foreground/30">{service.number}</span>
@@ -109,7 +109,7 @@ export function ServicesSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="mt-16 p-8 lg:p-12 bg-foreground text-background rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6"
+          className="mt-16 p-6 sm:p-8 lg:p-12 bg-foreground text-background rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left"
         >
           <div>
             <h3 className="text-2xl font-light tracking-tight mb-2">Have a project in mind?</h3>

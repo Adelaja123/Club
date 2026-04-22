@@ -18,9 +18,9 @@ export function ProjectsSection() {
     <section
       ref={ref}
       id="projects"
-      className="snap-section relative py-32 bg-secondary/30"
+      className="snap-section relative py-16 md:py-24 lg:py-32 bg-secondary/30"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
@@ -30,7 +30,7 @@ export function ProjectsSection() {
               </span>
             </RevealText>
             <RevealText delay={0.2}>
-              <h2 className="text-4xl md:text-5xl font-light tracking-tight text-balance">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-balance">
                 Selected Projects
               </h2>
             </RevealText>
@@ -57,7 +57,7 @@ export function ProjectsSection() {
             >
               <Link href={`/projects/${project.slug}`}>
                 <div
-                  className={`relative overflow-hidden rounded-2xl ${project.color} p-8 lg:p-10 min-h-[400px] flex flex-col justify-between transition-all duration-500 ${
+                  className={`relative overflow-hidden rounded-2xl ${project.color} p-6 sm:p-8 lg:p-10 min-h-[320px] sm:min-h-[380px] lg:min-h-[400px] flex flex-col justify-between transition-all duration-500 ${
                     hoveredProject && hoveredProject !== project.id
                       ? "opacity-50"
                       : ""
@@ -94,7 +94,7 @@ export function ProjectsSection() {
                       </motion.div>
                     </div>
 
-                    <h3 className="text-2xl lg:text-3xl font-light tracking-tight mb-4 text-balance">
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-light tracking-tight mb-3 sm:mb-4 text-balance">
                       {project.title}
                     </h3>
                     <p className="text-muted-foreground leading-relaxed max-w-md">

@@ -14,7 +14,7 @@ export function ProjectsPageContent() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-6 lg:px-12">
+      <section className="pt-28 sm:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -24,7 +24,7 @@ export function ProjectsPageContent() {
             <span className="text-sm text-muted-foreground tracking-widest uppercase mb-4 block">
               Portfolio
             </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-6 text-balance">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-6 text-balance">
               Selected Projects
             </h1>
             <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
@@ -59,9 +59,9 @@ export function ProjectsPageContent() {
       </section>
 
       {/* Projects Grid */}
-      <section ref={ref} className="px-6 lg:px-12 pb-32">
+      <section ref={ref} className="px-4 sm:px-6 lg:px-12 pb-20 sm:pb-32">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
             {projects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
@@ -70,13 +70,13 @@ export function ProjectsPageContent() {
       </section>
 
       {/* CTA Section */}
-      <section className="px-6 lg:px-12 pb-32">
+      <section className="px-4 sm:px-6 lg:px-12 pb-20 sm:pb-32">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="bg-secondary/50 rounded-3xl p-8 md:p-12 lg:p-16 text-center"
+            className="bg-secondary/50 rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 text-center"
           >
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight mb-4 text-balance">
               Have a project in mind?

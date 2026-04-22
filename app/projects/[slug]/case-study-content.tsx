@@ -21,7 +21,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section ref={heroRef} className="pt-32 pb-16 px-6 lg:px-12">
+      <section ref={heroRef} className="pt-28 sm:pt-32 pb-10 sm:pb-16 px-4 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -38,7 +38,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8 text-balance">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-6 sm:mb-8 text-balance">
               {project.title}
             </h1>
 
@@ -53,7 +53,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 pt-8 border-t border-border"
+            className="grid grid-cols-2 md:grid-cols-4 gap-5 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border"
           >
             <div>
               <div className="text-sm text-muted-foreground mb-1">Duration</div>
@@ -76,7 +76,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
       </section>
 
       {/* Hero Image */}
-      <section className="px-6 lg:px-12 pb-16">
+      <section className="px-4 sm:px-6 lg:px-12 pb-10 sm:pb-16">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -107,9 +107,9 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
       </section>
 
       {/* Content Section */}
-      <section ref={contentRef} className="px-6 lg:px-12 py-16">
+      <section ref={contentRef} className="px-4 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+          <div className="grid lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16">
             {/* Sidebar */}
             <motion.aside
               initial={{ opacity: 0, x: -30 }}
@@ -212,7 +212,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
 
               {/* Challenge & Solution */}
               {(project.challenge || project.solution) && (
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid sm:grid-cols-2 gap-5 sm:gap-8">
                   {project.challenge && (
                     <div className="p-6 bg-secondary/50 rounded-2xl">
                       <h3 className="text-sm text-muted-foreground tracking-widest uppercase mb-4">
@@ -241,15 +241,15 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
                 <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6">
                   Results
                 </h2>
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-4 sm:gap-8">
                   <div className="p-6 bg-secondary/50 rounded-2xl text-center">
-                    <div className="text-4xl md:text-5xl font-light mb-2">
+                    <div className="text-3xl sm:text-4xl md:text-5xl font-light mb-2">
                       {project.metrics.users}
                     </div>
                     <div className="text-sm text-muted-foreground">Active Users</div>
                   </div>
-                  <div className="p-6 bg-secondary/50 rounded-2xl text-center">
-                    <div className="text-4xl md:text-5xl font-light text-emerald-600 mb-2">
+                  <div className="p-4 sm:p-6 bg-secondary/50 rounded-2xl text-center">
+                    <div className="text-3xl sm:text-4xl md:text-5xl font-light text-emerald-600 mb-2">
                       {project.metrics.growth}
                     </div>
                     <div className="text-sm text-muted-foreground">Year-over-Year Growth</div>
@@ -262,13 +262,13 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
       </section>
 
       {/* CTA Section */}
-      <section className="px-6 lg:px-12 py-16">
+      <section className="px-4 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isContentInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col md:flex-row items-center justify-between gap-8 p-8 md:p-12 bg-secondary/50 rounded-3xl"
+            className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 p-6 sm:p-8 md:p-12 bg-secondary/50 rounded-3xl text-center md:text-left"
           >
             <div>
               <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-2">
@@ -304,7 +304,7 @@ export function CaseStudyContent({ project }: CaseStudyContentProps) {
       </section>
 
       {/* Footer */}
-      <footer className="px-6 lg:px-12 py-8 border-t border-border">
+      <footer className="px-4 sm:px-6 lg:px-12 py-8 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} Oluwagbotemi Adelaja. All rights reserved.

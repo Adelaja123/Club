@@ -51,9 +51,9 @@ export function TestimonialsSection() {
     <section
       ref={ref}
       id="testimonials"
-      className="snap-section relative py-32"
+      className="snap-section relative py-16 md:py-24 lg:py-32"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
         <div className="text-center mb-16">
           <RevealText delay={0.1}>
@@ -62,7 +62,7 @@ export function TestimonialsSection() {
             </span>
           </RevealText>
           <RevealText delay={0.2}>
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight text-balance">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-balance">
               What People Say
             </h2>
           </RevealText>
@@ -91,7 +91,7 @@ export function TestimonialsSection() {
                 transition={{ duration: 0.5 }}
                 className="text-center"
               >
-                <p className="text-2xl md:text-3xl font-light leading-relaxed mb-8 text-balance">
+                <p className="text-xl sm:text-2xl md:text-3xl font-light leading-relaxed mb-6 sm:mb-8 text-balance">
                   {testimonials[current].content}
                 </p>
                 <div>
@@ -127,7 +127,7 @@ export function TestimonialsSection() {
           <p className="text-center text-sm text-muted-foreground mb-8">
             Trusted by innovative companies worldwide
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16">
+          <div           className="flex flex-wrap items-center justify-center gap-5 sm:gap-8 lg:gap-16">
             {["TechVentures", "InnovateLab", "DataFlow", "Scale Finance", "CloudNext"].map((company) => (
               <div
                 key={company}

@@ -21,7 +21,7 @@ export function HeroSection() {
     <section
       ref={ref}
       id="hero"
-      className="snap-section relative flex items-center justify-center overflow-hidden md:pt-20 lg:pt-24"
+      className="snap-section relative flex items-center justify-center overflow-hidden pt-24 md:pt-20 lg:pt-24"
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
@@ -38,7 +38,7 @@ export function HeroSection() {
 
       <motion.div
         style={{ opacity, y, scale }}
-        className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center"
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,7 +52,7 @@ export function HeroSection() {
           </span>
         </motion.div>
 
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight mb-8 text-balance">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-light tracking-tight mb-6 md:mb-8 text-balance">
           <StaggerText
             text="Crafting Digital"
             className="justify-center"
@@ -70,7 +70,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground leading-relaxed mb-20"
+          className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed mb-12 md:mb-20 px-2"
         >
           Hi, I&apos;m{" "}
           <span className="text-foreground font-medium">
@@ -85,7 +85,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-5 -mt-10"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 -mt-6 md:-mt-10"
         >
           <MagneticButton strength={0.15}>
             <a
