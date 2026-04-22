@@ -37,61 +37,54 @@ export function Navigation() {
   const isHomepage = pathname === "/";
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState(isHomepage ? "hero" : "");
-  const [isCompactNav, setIsCompactNav] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isCompactNav, setIsCompactNav] = useState(!isHomepage);
 
   const scrollRafRef = useRef<number | null>(null);
   const stateCacheRef = useRef({
-    activeSection: isHomepage ? "hero" : "",
-    isCompactNav: false,
+    activeSection: "hero",
+    isCompactNav: !isHomepage,
   });
 
   useEffect(() => {
-    // Scroll threshold for switching to compact nav (in pixels)
-    const SCROLL_THRESHOLD = 100;
+    // On inner pages, always show compact nav (hamburger button)
+    if (!isHomepage) {
+      setIsCompactNav(true);
+      setActiveSection("");
+      return;
+    }
+
+    const scrollContainer: Window | HTMLElement =
+      document.querySelector<HTMLElement>(".snap-container") ?? window;
 
     const updateNavState = () => {
-      // For homepage, use section-based detection
-      if (isHomepage) {
-        const aboutElement = document.getElementById("about");
-        const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
-        const nextCompactNav = aboutTop <= 96;
+      const aboutElement = document.getElementById("about");
+      const aboutTop = aboutElement?.getBoundingClientRect().top ?? Infinity;
+      const nextCompactNav = aboutTop <= 96;
 
-        let nextActiveSection = "hero";
+      let nextActiveSection = "hero";
 
-        for (const section of [...sectionIds].reverse()) {
-          const element = document.getElementById(section);
-          if (!element) continue;
+      for (const section of [...sectionIds].reverse()) {
+        const element = document.getElementById(section);
+        if (!element) continue;
 
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom > 150) {
-            nextActiveSection = section;
-            break;
-          }
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom > 150) {
+          nextActiveSection = section;
+          break;
         }
+      }
 
-        const previous = stateCacheRef.current;
+      const previous = stateCacheRef.current;
 
-        if (previous.isCompactNav !== nextCompactNav) {
-          previous.isCompactNav = nextCompactNav;
-          setIsCompactNav(nextCompactNav);
-        }
+      if (previous.isCompactNav !== nextCompactNav) {
+        previous.isCompactNav = nextCompactNav;
+        setIsCompactNav(nextCompactNav);
+      }
 
-        if (previous.activeSection !== nextActiveSection) {
-          previous.activeSection = nextActiveSection;
-          setActiveSection(nextActiveSection);
-        }
-      } else {
-        // For inner pages, use scroll position threshold
-        const scrollY = window.scrollY;
-        const nextCompactNav = scrollY > SCROLL_THRESHOLD;
-
-        const previous = stateCacheRef.current;
-
-        if (previous.isCompactNav !== nextCompactNav) {
-          previous.isCompactNav = nextCompactNav;
-          setIsCompactNav(nextCompactNav);
-        }
+      if (previous.activeSection !== nextActiveSection) {
+        previous.activeSection = nextActiveSection;
+        setActiveSection(nextActiveSection);
       }
     };
 
@@ -104,17 +97,11 @@ export function Navigation() {
       });
     };
 
-    // Use appropriate scroll container
-    const scrollContainer: Window | HTMLElement = isHomepage
-      ? (document.querySelector<HTMLElement>(".snap-container") ?? window)
-      : window;
-
     scrollContainer.addEventListener("scroll", scheduleUpdate, {
       passive: true,
     });
     window.addEventListener("resize", scheduleUpdate);
 
-    // Initial check
     scheduleUpdate();
 
     return () => {
@@ -166,7 +153,7 @@ export function Navigation() {
   };
 
   const shouldShowCompactToggle = isCompactNav && !isMobileMenuOpen;
-  const shouldShowExpandedHeader = !isCompactNav;
+  const shouldShowExpandedHeader = isHomepage && !isCompactNav;
 
   return (
     <>
@@ -245,14 +232,14 @@ export function Navigation() {
                               e.preventDefault();
                               scrollToSection(item.href);
                             }}
-                            className={`group relative text-sm tracking-wide transition-colors ${isHomepage && activeSection === item.href.replace("#", "")
+                            className={`group relative text-sm tracking-wide transition-colors ${activeSection === item.href.replace("#", "")
                                 ? "text-foreground"
                                 : "text-muted-foreground hover:text-foreground"
                               }`}
                           >
                             {item.label}
                             <span
-                              className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${isHomepage && activeSection === item.href.replace("#", "")
+                              className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${activeSection === item.href.replace("#", "")
                                   ? "w-full"
                                   : "w-0 group-hover:w-full"
                                 }`}
@@ -388,7 +375,7 @@ export function Navigation() {
                   <ul className="space-y-5 sm:space-y-6 lg:space-y-1">
                     {navItems.map((item, i) => {
                       const isActive =
-                        isHomepage && activeSection === item.href.replace("#", "");
+                        activeSection === item.href.replace("#", "");
 
                       return (
                         <li key={item.href}>
