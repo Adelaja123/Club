@@ -62,7 +62,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 }
 
@@ -84,17 +84,13 @@
   background: oklch(0.6 0 0);
 }
 
-/* Snap scroll container */
+/* Snap scroll container - gentle snapping with Lenis */
 .snap-container {
-  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100vh;
-  scroll-behavior: smooth;
 }
 
 .snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   min-height: 100vh;
 }
 

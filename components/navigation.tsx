@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { MagneticButton } from "./magnetic-button";
+import Lenis from "lenis";
 
 const navItems = [
   { label: "Home", href: "#hero", path: "/" },
@@ -46,9 +47,6 @@ export function Navigation() {
   });
 
   useEffect(() => {
-    const scrollContainer: Window | HTMLElement =
-      document.querySelector<HTMLElement>(".snap-container") ?? window;
-
     const updateNavState = () => {
       // For inner pages, switch to compact nav after scrolling past a threshold
       // For homepage, use the about section as the trigger
@@ -101,16 +99,13 @@ export function Navigation() {
       });
     };
 
-    scrollContainer.addEventListener("scroll", scheduleUpdate, {
-      passive: true,
-    });
+    // Use window scroll event (Lenis handles smooth scrolling via requestAnimationFrame)
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
     scheduleUpdate();
 
     return () => {
-      scrollContainer.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
 
