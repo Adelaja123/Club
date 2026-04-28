@@ -6,6 +6,8 @@ import { LenisProvider } from "@/components/lenis-provider";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
+const defaultOgImage = "/images/about-photo.jpg";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -37,6 +39,14 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "Oluwagbotemi Adelaja - Full Stack Developer",
     locale: "en_NG",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "Oluwagbotemi Adelaja portfolio preview",
+      },
+    ],
   },
   alternates: {
     canonical: "/",
@@ -56,6 +66,7 @@ export const metadata: Metadata = {
     description:
       "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript.",
     creator: "@oluwagbotemi",
+    images: [defaultOgImage],
   },
 };
 

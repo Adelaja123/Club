@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const projectUrl = getSiteUrl(`/projects/${slug}`);
+  const projectImageUrl = getSiteUrl(project.image);
   
   return {
     title: `${project.title} | Oluwagbotemi Adelaja`,
@@ -36,7 +37,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: project.description,
       type: "article",
       url: projectUrl,
-      images: [project.image],
+      images: [
+        {
+          url: projectImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${project.title} case study preview`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | Case Study`,
+      description: project.description,
+      images: [projectImageUrl],
     },
   };
 }

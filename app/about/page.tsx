@@ -3,6 +3,7 @@ import { AboutPageContent } from "./about-page-content";
 import { getSiteUrl } from "@/lib/site";
 
 const aboutUrl = getSiteUrl("/about");
+const aboutOgImage = getSiteUrl("/images/about-photo.jpg");
 
 export const metadata: Metadata = {
   title: "About | Oluwagbotemi Adelaja - Full Stack Developer",
@@ -17,6 +18,21 @@ export const metadata: Metadata = {
       "Learn more about Oluwagbotemi Adelaja, a full-stack developer passionate about creating exceptional digital experiences.",
     type: "website",
     url: aboutUrl,
+    images: [
+      {
+        url: aboutOgImage,
+        width: 1200,
+        height: 630,
+        alt: "About Oluwagbotemi Adelaja",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About | Oluwagbotemi Adelaja - Full Stack Developer",
+    description:
+      "Learn more about Oluwagbotemi Adelaja, a full-stack developer passionate about creating exceptional digital experiences.",
+    images: [aboutOgImage],
   },
 };
 
