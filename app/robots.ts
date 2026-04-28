@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { SITE_URL, getSiteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://oluwagbotemi.space/sitemap.xml",
+    sitemap: getSiteUrl("/sitemap.xml"),
+    host: SITE_URL,
   };
 }

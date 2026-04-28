@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getAllProjectSlugs } from "@/lib/projects";
+import { getSiteUrl } from "@/lib/site";
 import { CaseStudyContent } from "./case-study-content";
 
 interface PageProps {
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const projectUrl = `https://oluwagbotemi.space/projects/${slug}`;
+  const projectUrl = getSiteUrl(`/projects/${slug}`);
   
   return {
     title: `${project.title} | Oluwagbotemi Adelaja`,

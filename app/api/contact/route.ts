@@ -1,8 +1,23 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 export const runtime = "nodejs";
+
+let resendClient: Resend | null = null;
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
+
+  if (!resendClient) {
+    resendClient = new Resend(apiKey);
+  }
+
+  return resendClient;
+}
 
 // simple in-memory rate limit (per IP)
 const RATE_LIMIT = 5; // requests
@@ -34,6 +49,7 @@ function isRateLimited(ip: string) {
 
 export async function POST(req: Request) {
   try {
+    const resend = getResendClient();
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
 
     // 🚫 rate limit check

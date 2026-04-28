@@ -3,9 +3,8 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navigation } from "@/components/navigation";
 import { LenisProvider } from "@/components/lenis-provider";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
-
-const baseUrl = "https://oluwagbotemi.space";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(SITE_URL),
   title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
   description:
     "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and even Advanced HTML 5 and CSS 3. Award-winning developer crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
@@ -35,12 +34,12 @@ export const metadata: Metadata = {
     description:
       "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences.",
     type: "website",
-    url: baseUrl,
+    url: SITE_URL,
     siteName: "Oluwagbotemi Adelaja - Full Stack Developer",
     locale: "en_NG",
   },
   alternates: {
-    canonical: baseUrl,
+    canonical: "/",
   },
 
   robots: {
@@ -69,7 +68,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Oluwagbotemi Adelaja",
-    url: baseUrl,
+    url: SITE_URL,
     jobTitle: "Full Stack Developer",
     description:
       "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and even Advanced HTML 5 and CSS 3",
