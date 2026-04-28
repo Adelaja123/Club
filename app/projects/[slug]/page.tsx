@@ -22,13 +22,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const projectUrl = `https://oluwagbotemi.space/projects/${slug}`;
+  
   return {
     title: `${project.title} | Oluwagbotemi Adelaja`,
     description: project.overview,
+    alternates: {
+      canonical: projectUrl,
+    },
     openGraph: {
       title: `${project.title} | Case Study`,
       description: project.description,
       type: "article",
+      url: projectUrl,
       images: [project.image],
     },
   };

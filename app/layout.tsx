@@ -35,13 +35,14 @@ export const metadata: Metadata = {
     description:
       "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences.",
     type: "website",
-    url: `${baseUrl}/`,
+    url: baseUrl,
     siteName: "Oluwagbotemi Adelaja - Full Stack Developer",
     locale: "en_NG",
   },
   alternates: {
-    canonical: `${baseUrl}/`,
+    canonical: baseUrl,
   },
+
   robots: {
     index: true,
     follow: true,
