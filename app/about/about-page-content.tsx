@@ -198,9 +198,9 @@ export function AboutPageContent() {
               initial={{ opacity: 0, x: -40 }}
               animate={isContentInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
-              className="relative"
+              className="lg:sticky lg:top-24"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary sticky top-24">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary">
                 <Image
                   src="/images/about-photo.jpg"
                   alt="Oluwagbotemi Adelaja - Full Stack Developer"
