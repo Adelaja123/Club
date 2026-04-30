@@ -66,20 +66,41 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
+    // Helper function to escape HTML
+    const escapeHtml = (text: string) => {
+      const map: Record<string, string> = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      };
+      return text.replace(/[&<>"']/g, (char) => map[char]);
+    };
+
+    const escapedName = escapeHtml(name);
+    const escapedEmail = escapeHtml(email);
+    const escapedSubject = escapeHtml(subject || "");
+    const escapedMessage = escapeHtml(message).replace(/\n/g, "<br/>");
+
     // 📩 email to YOU (clean HTML)
     await resend.emails.send({
       from: "Contact form from Oluwagbotemi.io <contact@oluwagbotemi.space>",
       to: "adelajaoluwagbotemi00@gmail.com",
-      subject: subject || `New message from ${name}`,
+      subject: escapedSubject || `New message from ${escapedName}`,
       replyTo: email,
       html: `
-        <div style="font-family: Arial, sans-serif; line-height:1.6;">
-          <h2>New Contact Message</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>IP:</strong> ${ip}</p>
-          <hr/>
-          <p>${message}</p>
+        <div style="font-family: Arial, sans-serif; line-height:1.6; color: #333;">
+          <h2 style="color: #000; margin-bottom: 24px;">New Contact Message</h2>
+          <p><strong>Name:</strong> ${escapedName}</p>
+          <p><strong>Email:</strong> ${escapedEmail}</p>
+          <p><strong>Subject:</strong> ${escapedSubject || "No subject"}</p>
+          <p><strong>IP Address:</strong> ${ip}</p>
+          <hr style="margin: 24px 0; border: none; border-top: 1px solid #ddd;"/>
+          <div style="white-space: pre-wrap; word-wrap: break-word;">
+            <p><strong>Message:</strong></p>
+            <p>${escapedMessage}</p>
+          </div>
         </div>
       `,
     });
@@ -90,10 +111,10 @@ export async function POST(req: Request) {
       to: email,
       subject: "Thanks for contacting me!",
       html: `
-        <div style="font-family: Arial, sans-serif; line-height:1.6;">
-          <p>Hi ${name},</p>
+        <div style="font-family: Arial, sans-serif; line-height:1.6; color: #333;">
+          <p>Hi ${escapedName},</p>
           <p>Thanks for reaching out. I've received your message and will get back to you shortly.</p>
-          <p>— Oluwagbotemi</p>
+          <p style="margin-top: 24px; color: #666;">— Oluwagbotemi</p>
         </div>
       `,
     });
