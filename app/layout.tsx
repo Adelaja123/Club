@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
   description:
-    "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and even Advanced HTML 5 and CSS 3. Award-winning developer crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
+    "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, TypeScript and advanced HTML and CSS. Crafting exceptional digital experiences, scalable architectures, and intuitive user interfaces.",
   keywords: [
     "full stack developer Lagos",
     "Next.js developer Nigeria",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
     description:
-      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Award-winning developer crafting exceptional digital experiences.",
+      "Full Stack Developer in Lagos, Nigeria. Specialized in Next.js, React, and TypeScript. Crafting exceptional digital experiences.",
     type: "website",
     url: SITE_URL,
     siteName: "Oluwagbotemi Adelaja - Full Stack Developer",
