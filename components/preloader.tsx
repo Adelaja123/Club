@@ -138,7 +138,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
               variants={counterVariants}
               initial="initial"
               animate="animate"
-              className="absolute bottom-8 right-8 md:bottom-12 md:right-12"
+              className="fixed bottom-8 right-8 md:bottom-12 md:right-12"
             >
               <span className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light text-background/20 tabular-nums">
                 {counter}
@@ -146,7 +146,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
             </motion.div>
 
             {/* Loading bar */}
-            <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 w-32 md:w-48">
+            <div className="fixed bottom-8 left-8 md:bottom-12 md:left-12 w-32 md:w-48">
               <div className="h-[1px] bg-background/10 w-full overflow-hidden">
                 <motion.div
                   className="h-full bg-background/40"
@@ -170,7 +170,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.8, duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
-              className="absolute top-8 left-8 md:top-12 md:left-12 w-2 h-2 bg-background/40 rounded-full"
+              className="fixed top-8 left-8 md:top-12 md:left-12 w-2 h-2 bg-background/40 rounded-full"
             />
           </div>
 
