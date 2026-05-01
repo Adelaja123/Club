@@ -40,7 +40,6 @@ export const projects: Project[] = [
       "FinanceFlow is a comprehensive financial management platform designed to help modern businesses track expenses, manage budgets, and gain actionable insights through AI-powered analytics. The platform features real-time dashboards, automated reporting, and seamless Stripe integration for payment processing.",
     services: ["Full Stack Development", "UI/UX Design", "API Architecture"],
     techStack: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "Tailwind CSS", "Prisma"],
-    repoUrl: "https://github.com/Adelaja123/financeflow",
     year: "2024",
     duration: "3 months",
     challenge:
@@ -64,7 +63,6 @@ export const projects: Project[] = [
       "MedConnect is a secure telemedicine platform that bridges the gap between patients and healthcare providers. Built with privacy-first architecture, it enables video consultations, secure messaging, prescription management, and medical record sharing while maintaining full HIPAA compliance.",
     services: ["Full Stack Development", "Security Architecture", "DevOps"],
     techStack: ["Next.js", "WebRTC", "Redis", "Docker", "PostgreSQL", "Socket.io"],
-    repoUrl: "https://github.com/Adelaja123/medconnect",
     year: "2024",
     duration: "4 months",
     challenge:
@@ -88,7 +86,6 @@ export const projects: Project[] = [
       "TaskFlow Pro revolutionizes project management by combining traditional task tracking with AI-powered insights. The platform learns from team behavior to suggest optimal task assignments, predict bottlenecks, and automate routine workflows.",
     services: ["Full Stack Development", "AI Integration", "UX Research"],
     techStack: ["React", "Node.js", "MongoDB", "OpenAI API", "Express", "Tailwind CSS"],
-    repoUrl: "https://github.com/Adelaja123/taskflow-pro",
     year: "2023",
     duration: "2.5 months",
     challenge:
@@ -134,8 +131,6 @@ export const projects: Project[] = [
       "Artistry is a premium marketplace connecting digital artists with collectors worldwide. The platform combines traditional e-commerce with Web3 capabilities, allowing artists to sell digital works, accept commissions, and mint NFTs—all from a unified dashboard.",
     services: ["Full Stack Development", "Smart Contract Development", "Payment Integration"],
     techStack: ["Next.js", "Solidity", "IPFS", "Stripe", "Ethereum", "Tailwind CSS"],
-    repoUrl: "https://github.com/Adelaja123/artistry",
-
     year: "2024",
     duration: "4 months",
     challenge:

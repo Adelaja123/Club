@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 interface PreloaderProps {
   onComplete?: () => void;
@@ -68,39 +68,41 @@ export function Preloader({ onComplete }: PreloaderProps) {
   }, [handleComplete]);
 
   const words = ["Oluwagbotemi", "Adelaja"];
+  const smoothEase = [0.33, 1, 0.68, 1] as const;
+  const revealEase = [0.76, 0, 0.24, 1] as const;
 
-  const slideUp = {
+  const slideUp: Variants = {
     initial: { y: 0 },
     exit: {
       y: "-100%",
       transition: {
         duration: 0.8,
-        ease: [0.76, 0, 0.24, 1],
+        ease: revealEase,
         delay: 0.2,
       },
     },
   };
 
-  const wordReveal = {
+  const wordReveal: Variants = {
     initial: { y: "100%" },
     animate: (i: number) => ({
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.33, 1, 0.68, 1],
+        ease: smoothEase,
         delay: 0.5 + i * 0.1,
       },
     }),
   };
 
-  const counterVariants = {
+  const counterVariants: Variants = {
     initial: { opacity: 0, y: 20 },
     animate: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.33, 1, 0.68, 1],
+        ease: smoothEase,
       },
     },
   };
@@ -179,7 +181,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+              transition={{ delay: 0.8, duration: 0.5, ease: smoothEase }}
               className="fixed top-8 left-8 md:top-12 md:left-12 w-2 h-2 bg-background/40 rounded-full"
             />
           </div>
@@ -191,7 +193,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
               animate={{ scaleY: 1 }}
               transition={{
                 duration: 0.6,
-                ease: [0.76, 0, 0.24, 1],
+                ease: revealEase,
               }}
               className="absolute inset-0 bg-background origin-bottom"
               style={{

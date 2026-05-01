@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { z } from "zod";
 
 export const runtime = "nodejs";
 
@@ -19,7 +20,14 @@ function getResendClient() {
   return resendClient;
 }
 
-// simple in-memory rate limit (per IP)
+const contactSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  email: z.string().trim().email().max(254),
+  subject: z.string().trim().max(120).optional().default(""),
+  message: z.string().trim().min(10).max(5000),
+  company: z.string().trim().max(0).optional().default(""),
+});
+
 const RATE_LIMIT = 5; // requests
 const WINDOW_MS = 60 * 1000; // 1 min
 
@@ -50,9 +58,11 @@ function isRateLimited(ip: string) {
 export async function POST(req: Request) {
   try {
     const resend = getResendClient();
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+    const ip =
+      req.headers.get("x-vercel-forwarded-for") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unknown";
 
-    // 🚫 rate limit check
     if (isRateLimited(ip)) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
@@ -60,13 +70,21 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, email, subject, message } = await req.json();
+    const parsed = contactSchema.safeParse(await req.json());
 
-    if (!name?.trim() || !email?.trim() || !message?.trim()) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Please provide valid contact details and a message." },
+        { status: 400 },
+      );
     }
 
-    // Helper function to escape HTML
+    const { name, email, subject, message, company } = parsed.data;
+
+    if (company) {
+      return NextResponse.json({ success: true });
+    }
+
     const escapeHtml = (text: string) => {
       const map: Record<string, string> = {
         "&": "&amp;",
@@ -83,12 +101,12 @@ export async function POST(req: Request) {
     const escapedSubject = escapeHtml(subject || "");
     const escapedMessage = escapeHtml(message).replace(/\n/g, "<br/>");
 
-    // 📩 email to YOU (clean HTML)
-    await resend.emails.send({
+    const ownerEmailResult = await resend.emails.send({
       from: "Contact form from Oluwagbotemi.io <contact@oluwagbotemi.space>",
       to: "adelajaoluwagbotemi00@gmail.com",
       subject: escapedSubject || `New message from ${escapedName}`,
       replyTo: email,
+      text: `New Contact Message\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject || "No subject"}\nIP Address: ${ip}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height:1.6; color: #333;">
           <h2 style="color: #000; margin-bottom: 24px;">New Contact Message</h2>
@@ -105,11 +123,15 @@ export async function POST(req: Request) {
       `,
     });
 
-    // 📬 auto-reply
-    await resend.emails.send({
+    if (ownerEmailResult.error) {
+      throw ownerEmailResult.error;
+    }
+
+    const autoReplyResult = await resend.emails.send({
       from: "Oluwagbotemi.io <contact@oluwagbotemi.space>",
       to: email,
       subject: "Thanks for contacting me!",
+      text: `Hi ${name},\n\nThanks for reaching out. I've received your message and will get back to you shortly.\n\nOluwagbotemi`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height:1.6; color: #333;">
           <p>Hi ${escapedName},</p>
@@ -119,14 +141,9 @@ export async function POST(req: Request) {
       `,
     });
 
-    // 📊 basic logging (server console)
-    console.log("New contact:", {
-      name,
-      email,
-      subject,
-      ip,
-      time: new Date().toISOString(),
-    });
+    if (autoReplyResult.error) {
+      throw autoReplyResult.error;
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

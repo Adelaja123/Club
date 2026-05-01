@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Preloader } from "./preloader";
 
 interface PreloaderWrapperProps {
@@ -8,21 +8,20 @@ interface PreloaderWrapperProps {
 }
 
 export function PreloaderWrapper({ children }: PreloaderWrapperProps) {
-  const [shouldShowPreloader, setShouldShowPreloader] = useState<boolean | null>(
-    null
-  );
-  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
-
-  useEffect(() => {
-    const hasVisited = sessionStorage.getItem("hasVisitedBefore");
-
-    if (hasVisited) {
-      setIsPreloaderComplete(true);
-      setShouldShowPreloader(false);
-    } else {
-      setShouldShowPreloader(true);
+  const [shouldShowPreloader, setShouldShowPreloader] = useState(() => {
+    if (typeof window === "undefined") {
+      return null;
     }
-  }, []);
+
+    return sessionStorage.getItem("hasVisitedBefore") ? false : true;
+  });
+  const [isPreloaderComplete, setIsPreloaderComplete] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return sessionStorage.getItem("hasVisitedBefore") ? true : false;
+  });
 
   const handlePreloaderComplete = () => {
     setIsPreloaderComplete(true);

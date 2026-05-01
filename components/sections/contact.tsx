@@ -38,6 +38,7 @@ export function ContactSection() {
     email: "",
     subject: "",
     message: "",
+    company: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -54,7 +55,7 @@ export function ContactSection() {
     e.preventDefault();
 
     // basic guard
-    if (!form.name || !form.email || !form.message) {
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -78,9 +79,11 @@ export function ContactSection() {
       }
 
       setSuccess(true);
-      setForm({ name: "", email: "", subject: "", message: "" });
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      setForm({ name: "", email: "", subject: "", message: "", company: "" });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Something went wrong"
+      );
     }
 
     setLoading(false);
@@ -159,40 +162,95 @@ export function ContactSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="company">Company</label>
                 <input
-                  name="name"
-                  value={form.name}
+                  id="company"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.company}
                   onChange={handleChange}
-                  placeholder="Your name"
-                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
                 />
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="contact-name"
+                    className="mb-2 block text-xs uppercase tracking-[0.18em] text-background/60"
+                  >
+                    Name
+                  </label>
+                  <input
+                    id="contact-name"
+                    name="name"
+                    autoComplete="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    required
+                    className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="contact-email"
+                    className="mb-2 block text-xs uppercase tracking-[0.18em] text-background/60"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    required
+                    className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="contact-subject"
+                  className="mb-2 block text-xs uppercase tracking-[0.18em] text-background/60"
+                >
+                  Subject
+                </label>
                 <input
-                  name="email"
-                  type="email"
-                  value={form.email}
+                  id="contact-subject"
+                  name="subject"
+                  autoComplete="off"
+                  value={form.subject}
                   onChange={handleChange}
-                  placeholder="your@email.com"
+                  placeholder="Project inquiry"
                   className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
                 />
               </div>
 
-              <input
-                name="subject"
-                value={form.subject}
-                onChange={handleChange}
-                placeholder="Project inquiry"
-                className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background"
-              />
-
-              <textarea
-                name="message"
-                rows={4}
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Tell me about your project..."
-                className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background resize-none"
-              />
+              <div>
+                <label
+                  htmlFor="contact-message"
+                  className="mb-2 block text-xs uppercase tracking-[0.18em] text-background/60"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows={4}
+                  autoComplete="off"
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder="Tell me about your project..."
+                  required
+                  className="w-full px-0 py-3 bg-transparent border-b border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background resize-none"
+                />
+              </div>
 
               <MagneticButton strength={0.15}>
                 <button
@@ -207,12 +265,16 @@ export function ContactSection() {
               </MagneticButton>
 
               {success && (
-                <p className="text-sm text-green-400">
+                <p className="text-sm text-green-400" role="status" aria-live="polite">
                   Message sent successfully. Check your Mail
                 </p>
               )}
 
-              {error && <p className="text-sm text-red-400">{error}</p>}
+              {error && (
+                <p className="text-sm text-red-400" role="alert">
+                  {error}
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
