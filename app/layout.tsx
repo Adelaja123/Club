@@ -18,12 +18,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   icons: {
-    icon: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
+    icon: [{ url: "/favicon.ico", sizes: "any" }],
     shortcut: "/favicon.ico",
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   title: "Full Stack Developer in Lagos Nigeria | Oluwagbotemi Adelaja",
   description:
