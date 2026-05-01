@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navigation } from "@/components/navigation";
 import { LenisProvider } from "@/components/lenis-provider";
+import { PreloaderWrapper } from "@/components/preloader-wrapper";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -113,11 +114,13 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <LenisProvider>
-          <Navigation />
-          {children}
-          {process.env.NODE_ENV === "production" && <Analytics />}
-        </LenisProvider>
+        <PreloaderWrapper>
+          <LenisProvider>
+            <Navigation />
+            {children}
+            {process.env.NODE_ENV === "production" && <Analytics />}
+          </LenisProvider>
+        </PreloaderWrapper>
       </body>
     </html>
   );
