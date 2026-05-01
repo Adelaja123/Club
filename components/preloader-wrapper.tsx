@@ -8,40 +8,44 @@ interface PreloaderWrapperProps {
 }
 
 export function PreloaderWrapper({ children }: PreloaderWrapperProps) {
-  const [mounted, setMounted] = useState(false);
+  const [shouldShowPreloader, setShouldShowPreloader] = useState<boolean | null>(
+    null
+  );
   const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
-  const [showPreloader, setShowPreloader] = useState(false);
 
   useEffect(() => {
-    // Check if this is not the first visit in this session
     const hasVisited = sessionStorage.getItem("hasVisitedBefore");
+
     if (hasVisited) {
       setIsPreloaderComplete(true);
-      setShowPreloader(false);
+      setShouldShowPreloader(false);
     } else {
-      setShowPreloader(true);
+      setShouldShowPreloader(true);
     }
-    setMounted(true);
   }, []);
 
   const handlePreloaderComplete = () => {
     setIsPreloaderComplete(true);
-    setShowPreloader(false);
-    // Mark that user has visited
+    setShouldShowPreloader(false);
     sessionStorage.setItem("hasVisitedBefore", "true");
   };
 
+  const shouldHideChildren =
+    shouldShowPreloader === null || (shouldShowPreloader && !isPreloaderComplete);
+
   return (
     <>
-      {mounted && showPreloader && (
+      {shouldShowPreloader && (
         <Preloader onComplete={handlePreloaderComplete} />
       )}
       <div
         style={{
-          opacity: !mounted ? 1 : isPreloaderComplete ? 1 : 0,
+          opacity: shouldHideChildren ? 0 : 1,
+          pointerEvents: shouldHideChildren ? "none" : "auto",
           transition: "opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1)",
           transitionDelay: isPreloaderComplete ? "0.2s" : "0s",
         }}
+        aria-hidden={shouldHideChildren}
       >
         {children}
       </div>

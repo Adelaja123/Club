@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PreloaderProps {
@@ -11,16 +11,17 @@ export function Preloader({ onComplete }: PreloaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [counter, setCounter] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const animationFrameRef = useRef<number | null>(null);
+  const exitTimeoutRef = useRef<number | null>(null);
+  const completeTimeoutRef = useRef<number | null>(null);
 
   const handleComplete = useCallback(() => {
     onComplete?.();
   }, [onComplete]);
 
   useEffect(() => {
-    // Prevent scrolling during preloader
     document.body.style.overflow = "hidden";
 
-    // Simulate loading with easing - starts fast, slows near end (like real loading)
     const duration = 2200;
     const startTime = Date.now();
 
@@ -28,19 +29,17 @@ export function Preloader({ onComplete }: PreloaderProps) {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Easing function: starts fast, slows down near the end
       const eased = 1 - Math.pow(1 - progress, 3);
       const currentCount = Math.floor(eased * 100);
 
       setCounter(currentCount);
 
       if (progress < 1) {
-        requestAnimationFrame(updateCounter);
+        animationFrameRef.current = requestAnimationFrame(updateCounter);
       } else {
-        // Start exit animation
-        setTimeout(() => {
+        exitTimeoutRef.current = window.setTimeout(() => {
           setIsExiting(true);
-          setTimeout(() => {
+          completeTimeoutRef.current = window.setTimeout(() => {
             setIsLoading(false);
             document.body.style.overflow = "";
             handleComplete();
@@ -49,14 +48,25 @@ export function Preloader({ onComplete }: PreloaderProps) {
       }
     };
 
-    requestAnimationFrame(updateCounter);
+    animationFrameRef.current = requestAnimationFrame(updateCounter);
 
     return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+      }
+
+      if (completeTimeoutRef.current !== null) {
+        window.clearTimeout(completeTimeoutRef.current);
+      }
+
       document.body.style.overflow = "";
     };
   }, [handleComplete]);
 
-  // Words to reveal
   const words = ["Oluwagbotemi", "Adelaja"];
 
   const slideUp = {
